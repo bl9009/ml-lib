@@ -3,7 +3,7 @@
 import numpy as np
 
 class LinearRegressor(object):
-    """Implements a Linear Regression model based on normal equation learningSchedule.
+    """Implements a Linear Regression model based on normal equation learning.
 
     Attributes:
         theta: Paramaters for linear hypothesis.
