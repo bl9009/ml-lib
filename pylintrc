@@ -1,0 +1,3 @@
+[BASIC]
+# Ignore short but good variable names
+good-names=h,i,m,t,X,x,y,tmp_X
