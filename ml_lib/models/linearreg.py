@@ -58,7 +58,7 @@ class SgdRegressor(object):
         self.theta = None
 
     def fit(self, X, y):
-        """Fits the model.
+        """Fits the model using stochastic gradient descent algorithm.
 
         Args:
             X: Training data set.
@@ -150,7 +150,7 @@ def make_mse(X, y):
 
         h = make_h(theta)
 
-        return (1./(2 * m)) * sum([(h(x_i).item() - y_i)**2 for x_i, y_i in zip(X, y)])
+        return (1./(2 * m)) * sum([(h(x_i) - y_i)**2 for x_i, y_i in zip(X, y)])
 
     return mse
 
@@ -175,12 +175,14 @@ def make_mse_gradient_vector(X, y):
         """
         m = instance_count(X)
 
+        h = make_h(theta)
+
         index = np.random.randint(m)
 
         x_i = X[index:index+1]
         y_i = y[index:index+1]
 
-        return 2./m * x_i.T.dot(x_i.dot(theta.T) - y_i).T
+        return 2./m * x_i.T.dot(h(x_i) - y_i).T
 
     return mse_gradient_vector
 
