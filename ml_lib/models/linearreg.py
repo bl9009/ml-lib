@@ -5,12 +5,21 @@ import numpy as np
 class LinearRegressor(object):
     """Implements a Linear Regression model based on normal equation learning.
 
+    When specifying regularization factor alpha, model performs ridge
+    regression.
+
     Attributes:
         theta: Paramaters for linear hypothesis.
     """
 
-    def __init__(self):
-        """Initializes Regressor."""
+    def __init__(self, alpha=0.):
+        """Initializes Regressor.
+        
+        Args:
+            alpha: Regularization factor for ridge regression
+        """
+        self.alpha = alpha
+
         self.theta = None
 
     def fit(self, X, y):
@@ -20,7 +29,9 @@ class LinearRegressor(object):
             X: Training data set.
             y: Labels.
         """
-        self.theta = np.linalg.inv(X.T.dot(X)).dot(X.T.dot(y))
+        A = np.identity(feature_count(X))
+
+        self.theta = np.linalg.inv(X.T.dot(X) + self.alpha * A).dot(X.T.dot(y))
 
     def predict(self, X):
         """Performs predictions based on fitted model.
