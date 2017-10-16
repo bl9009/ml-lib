@@ -98,7 +98,7 @@ class SgdRegressor(object):
         Returns:
             A numpy array containing the predicted values.
         """
-        X = insert_x0(X)
+        X = insert_intercept(X)
 
         h = make_h(self.theta)
 
@@ -198,7 +198,7 @@ def make_mse_gradient_vector(X, y):
     return mse_gradient_vector
 
 
-def insert_x0(X):
+def insert_intercept(X):
     """Prepend feature x0 = 1 to feature set X.
     Args:
 
