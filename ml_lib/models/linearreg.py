@@ -14,7 +14,7 @@ class LinearRegressor(object):
 
     def __init__(self, alpha=0.):
         """Initializes Regressor.
-        
+
         Args:
             alpha: Regularization factor for ridge regression
         """
@@ -54,17 +54,19 @@ class SgdRegressor(object):
         theta: Parameters for linear hypothesis.
     """
 
-    def __init__(self, eta0=0.01, annealing=0.25, epochs=100):
+    def __init__(self, eta0=0.01, annealing=0.25, epochs=100, alpha=0.):
         """Initializes Regressor with hyperparameters.
 
         Args:
             eta0: Starting learning rate.
             annealing: Rate for annealing the learning rate.
             epochs: Number of epochs used for training.
+            alpha: Regularization factor
         """
         self.eta0 = eta0
         self.annealing = annealing
         self.epochs = epochs
+        self.alpha = alpha
 
         self.theta = None
 
@@ -75,7 +77,7 @@ class SgdRegressor(object):
             X: Training data set.
             y: Labels.
         """
-        X = insert_x0(X)
+        X = insert_intercept(X)
 
         self.theta = np.ones((1, feature_count(X)))
 
@@ -87,7 +89,8 @@ class SgdRegressor(object):
             for i in range(m):
                 eta = self.__learning_schedule(epoch * m + i + 1)
 
-                self.theta = self.theta - eta * gradient_vector(self.theta)
+                self.theta = self.theta - eta * (gradient_vector(self.theta) + self.alpha * lasso_vector(self.theta))
+
 
     def predict(self, X):
         """Performs predictions based on fitted model.
@@ -182,7 +185,7 @@ def make_mse_gradient_vector(X, y):
             theta: Parameters to calculate MSE gradient for.
 
         Returns:
-            Vector of gradients.
+            Vector of gradients as numpy array.
         """
         m = instance_count(X)
 
@@ -196,6 +199,31 @@ def make_mse_gradient_vector(X, y):
         return 2./m * x_i.T.dot(h(x_i) - y_i).T
 
     return mse_gradient_vector
+
+def lasso_vector(theta):
+    """Calculates gradient vector for LASSO regularization.
+
+    Args:
+        theta: Parameters to calculate gradient vector for.
+
+    Returns:
+        Numpy array with gradients.
+    """
+    return sign(theta)
+
+def vectorize(func):
+    """Decorator for vectorizing functions."""
+    return np.vectorize(func)
+
+@vectorize
+def sign(theta):
+    """Calculates subgradient derivative for LASSO penalty."""
+    if theta > 0:
+        return 1
+    if theta == 0:
+        return 0
+    if theta < 0:
+        return -1
 
 
 def insert_intercept(X):
