@@ -2,6 +2,8 @@
 
 import numpy as np
 
+import utils.numpy_utils as np_utils
+
 class LinearRegressor(object):
     """Implements a Linear Regression model based on normal equation learning.
 
@@ -77,11 +79,11 @@ class SgdRegressor(object):
             X: Training data set.
             y: Labels.
         """
-        X = insert_intercept(X)
+        X = np_utils.insert_intercept(X)
 
-        self.theta = np.ones((1, feature_count(X)))
+        self.theta = np.ones((1, np_utils.feature_count(X)))
 
-        m = instance_count(X)
+        m = np_utils.instance_count(X)
 
         gradient_vector = make_mse_gradient_vector(X, y)
 
@@ -141,33 +143,6 @@ def make_h(theta):
 
     return h
 
-def make_mse(X, y):
-    """Closure that returns MSE cost function.
-
-    Args:
-        X: Feature set.
-        y: Labels.
-
-    Returns:
-        MSE function.
-    """
-    def mse(theta):
-        """Calculates MSE based on parameters theta.
-
-        Args:
-            theta: Paramaters to calculate MSE for.
-
-        Returns:
-            The MSE of given X, y and theta.
-        """
-        m = instance_count(X)
-
-        h = make_h(theta)
-
-        return (1./(2 * m)) * sum([(h(x_i) - y_i)**2 for x_i, y_i in zip(X, y)])
-
-    return mse
-
 def make_mse_gradient_vector(X, y):
     """Closure that returns a function to calculate the MSE gradient vector.
 
@@ -187,7 +162,7 @@ def make_mse_gradient_vector(X, y):
         Returns:
             Vector of gradients as numpy array.
         """
-        m = instance_count(X)
+        m = np_utils.instance_count(X)
 
         h = make_h(theta)
 
@@ -211,10 +186,6 @@ def lasso_vector(theta):
     """
     return sign(theta)
 
-def vectorize(func):
-    """Decorator for vectorizing functions."""
-    return np.vectorize(func)
-
 @vectorize
 def sign(theta):
     """Calculates subgradient derivative for LASSO penalty."""
@@ -224,31 +195,3 @@ def sign(theta):
         return 0
     if theta < 0:
         return -1
-
-
-def insert_intercept(X):
-    """Prepend feature x0 = 1 to feature set X.
-    Args:
-
-        X: Feature set.
-
-    Returns:
-        Updated feature set with prepended feature x0 = 1
-    """
-    instances, features = X.shape
-
-    features += 1
-
-    tmp_X = np.ones((instances, features))
-
-    tmp_X[0:, 1:] = X
-
-    return tmp_X
-
-def instance_count(X):
-    """Return number of instances of feature set."""
-    return X.shape[0]
-
-def feature_count(X):
-    """Return number of features of feature set."""
-    return X.shape[1]
