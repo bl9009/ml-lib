@@ -1,10 +1,10 @@
 class LogisticRegressor(object):
 
     def __init__(self):
-        pass
+        self.theta = None
 
     def fit(self, X, y):
-        pass
+        self.theta = np.ones((1, np_utils.feature_count(X)))
 
     def predict(self, X):
         pass
