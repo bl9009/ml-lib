@@ -4,6 +4,8 @@ import numpy as np
 
 from ..utils import numpy_utils as np_utils
 
+from ..optimizers.gradientdescent import StochasticGradientDescent
+
 class LinearModel(object):
     """ Represents a linear model with a hypothesis of the form:
     theta0 + theta_1 * x_1 + .. + theta_j * x_j for j: 1..n
@@ -100,6 +102,7 @@ class SgdRegressor(object):
         self.l1_ratio = l1_ratio
 
         self.model = None
+        self.optimizer = None
 
     def fit(self, X, y):
         """Fits the model using stochastic gradient descent algorithm.
@@ -110,20 +113,17 @@ class SgdRegressor(object):
         """
         X = np_utils.insert_intercept(X)
 
-        self.model = LinearModel(np_utils.feature_count(X))
-
         m = np_utils.instance_count(X)
 
-        gradient_vector = make_mse_gradient_vector(X, y)
+        self.model = LinearModel(np_utils.feature_count(X))
+        
+        self.optimizer = StochasticGradientDescent(X, y)
 
         for epoch in range(self.epochs):
             for i in range(m):
                 eta = self.__learning_schedule(epoch * m + i + 1)
 
-                penalty = penalty_vector(self.model.theta, self.l1_ratio)
-                gradient = gradient_vector(self.model.theta)
-
-                self.model.theta = self.model.theta - eta * (gradient + self.alpha * penalty)
+                self.model = optimizer.do_step(model, eta)
 
     def predict(self, X):
         """Performs predictions based on fitted model.
@@ -148,61 +148,6 @@ class SgdRegressor(object):
             Adjusted learning rate eta.
         """
         return self.eta0 / t**self.annealing
-
-
-def make_h(theta):
-    """Closure that returns hypothesis function h(x) with paramaters theta.
-
-    Args:
-        theta: Parameters for h(x).
-
-    Returns:
-        Hypothesis function h(x).
-    """
-    def h(x):
-        """Hypothesis function h(x) used to make predictions.
-
-        Args:
-            x: Vector of features to make prediction of.
-
-        Returns:
-            Vector of predictions.
-        """
-        return np.asmatrix(x).dot(theta.T)
-
-    return h
-
-def make_mse_gradient_vector(X, y):
-    """Closure that returns a function to calculate the MSE gradient vector.
-
-    Args:
-        X: Feature set.
-        y: Labels.
-
-    Returns:
-        Function to calculate gradient vector of MSE function.
-    """
-    def mse_gradient_vector(theta):
-        """Calculates the gradient vector of MSE function.
-
-        Args:
-            theta: Parameters to calculate MSE gradient for.
-
-        Returns:
-            Vector of gradients as numpy array.
-        """
-        m = np_utils.instance_count(X)
-
-        h = make_h(theta)
-
-        index = np.random.randint(m)
-
-        x_i = X[index:index+1]
-        y_i = y[index:index+1]
-
-        return 2./m * x_i.T.dot(h(x_i) - y_i).T
-
-    return mse_gradient_vector
 
 def penalty_vector(theta, l1_ratio=1.):
     """Calculates vector of penalties for each paramater theta
