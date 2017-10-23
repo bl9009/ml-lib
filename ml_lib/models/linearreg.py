@@ -4,6 +4,14 @@ import numpy as np
 
 from ..utils import numpy_utils as np_utils
 
+class LinearModel(object):
+
+    def __init__(self, dim=2):
+        self.theta = np.ones((1, dim))
+
+    def h(self, X):
+        return np.asmatrix(X).dot(self.theta.T)
+
 class LinearRegressor(object):
     """Implements a Linear Regression model based on normal equation learning.
 
@@ -56,7 +64,7 @@ class SgdRegressor(object):
         theta: Parameters for linear hypothesis.
     """
 
-    def __init__(self, eta0=0.01, annealing=0.25, epochs=100, alpha=0., l1_ratio=1.):
+    def __init__(self, eta0=0.01, annealing=0., epochs=100, alpha=0., l1_ratio=1.):
         """Initializes Regressor with hyperparameters.
 
         Regularizes model with elastic net by setting regularization factor
@@ -76,7 +84,9 @@ class SgdRegressor(object):
         self.alpha = alpha
         self.l1_ratio = l1_ratio
 
-        self.theta = None
+        #self.theta = None
+
+        self.model = None
 
     def fit(self, X, y):
         """Fits the model using stochastic gradient descent algorithm.
@@ -87,7 +97,8 @@ class SgdRegressor(object):
         """
         X = np_utils.insert_intercept(X)
 
-        self.theta = np.ones((1, np_utils.feature_count(X)))
+        self.model = LinearModel(np_utils.feature_count(X))
+        #self.theta = np.ones((1, np_utils.feature_count(X)))
 
         m = np_utils.instance_count(X)
 
@@ -97,12 +108,10 @@ class SgdRegressor(object):
             for i in range(m):
                 eta = self.__learning_schedule(epoch * m + i + 1)
 
-                #l1_penalty = self.alpha * lasso_vector(self.theta)
-                #l2_penalty = self.alpha * ridge_vector(self.theta)
+                penalty = penalty_vector(self.theta, self.l1_ratio)
+                gradient = gradient_vector(self.theta)
 
-                ##penalty = self.l1_ratio * l1_penalty + (1. - self.l1_ratio) / 2. * l2_penalty
-
-                self.theta = self.theta - eta * gradient_vector(self.theta)# + penalty
+                self.model.theta = self.model.theta - eta * (gradient + self.alpha * penalty)
 
     def predict(self, X):
         """Performs predictions based on fitted model.
@@ -115,9 +124,9 @@ class SgdRegressor(object):
         """
         X = np_utils.insert_intercept(X)
 
-        h = make_h(self.theta)
+        #h = make_h(self.theta)
 
-        return h(X)
+        return self.model.h(X)
 
     def __learning_schedule(self, t):
         """Adjust learning rate depending on performed iterations t.
@@ -184,6 +193,28 @@ def make_mse_gradient_vector(X, y):
         return 2./m * x_i.T.dot(h(x_i) - y_i).T
 
     return mse_gradient_vector
+
+def penalty_vector(theta, l1_ratio=1.):
+    """Calculates vector of penalties for each paramater theta
+       using elastic net method.
+
+       l1_ratio specifies the ratio between l1 and l2 regression. Where 1.0 is
+       equal to lasso regression, 0.0 to ridge regression and 0.5 for balanced
+       lasso and ridge regression.
+
+    Args:
+        theta: Vector of parameters to penalize.
+        l1_ratio: Ratio for l1 regularization.
+
+    Returns:
+        Numpy array with penalties for each parameter theta.
+    """
+    l1_penalty = lasso_vector(theta)
+    l2_penalty = ridge_vector(theta)
+
+    penalty = l1_ratio * l1_penalty + (1. - l1_ratio) / 2. * l2_penalty
+
+    return penalty
 
 def lasso_vector(theta):
     """Calculates gradient vector for LASSO regularization.
