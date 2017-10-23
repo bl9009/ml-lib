@@ -5,11 +5,26 @@ import numpy as np
 from ..utils import numpy_utils as np_utils
 
 class LinearModel(object):
+    """ Represents a linear model with a hypothesis of the form:
+    theta0 + theta_1 * x_1 + .. + theta_j * x_j for j: 1..n
+
+    Attributes:
+        theta: Parameters of the linear hypothesis.
+    """
 
     def __init__(self, dim=2):
         self.theta = np.ones((1, dim))
 
     def h(self, X):
+        """ Calculates hypothesis for given feature matrix X.
+
+        Args:
+            X: A matrix of shape mxn where m is the number of instances and n
+            is the number of features.
+
+        Returns:
+            The result of the hypothesis as float.
+        """
         return np.asmatrix(X).dot(self.theta.T)
 
 class LinearRegressor(object):
@@ -30,14 +45,15 @@ class LinearRegressor(object):
         """
         self.alpha = alpha
 
-        self.model = None
+        self.model = LinearModel()
 
     def fit(self, X, y):
-        """Fits the model.
+        """Fits the model using the normal equation.
 
         Args:
-            X: Training data set.
-            y: Labels.
+            X: A mxn matrix representing the training data set, where m is the
+            number of training instances and n is the number of features.
+            y: A vector with m values representing the training labels.
         """
         A = np.identity(np_utils.feature_count(X))
 
@@ -47,7 +63,8 @@ class LinearRegressor(object):
         """Performs predictions based on fitted model.
 
         Args:
-            X: Feature set.
+            X: A matrix of shape mxn where m is the number of instances and n
+            is the number of features.
 
         Returns:
             A numpy array containing the predicted values.
@@ -82,8 +99,6 @@ class SgdRegressor(object):
         self.alpha = alpha
         self.l1_ratio = l1_ratio
 
-        #self.theta = None
-
         self.model = None
 
     def fit(self, X, y):
@@ -96,7 +111,6 @@ class SgdRegressor(object):
         X = np_utils.insert_intercept(X)
 
         self.model = LinearModel(np_utils.feature_count(X))
-        #self.theta = np.ones((1, np_utils.feature_count(X)))
 
         m = np_utils.instance_count(X)
 
@@ -106,8 +120,8 @@ class SgdRegressor(object):
             for i in range(m):
                 eta = self.__learning_schedule(epoch * m + i + 1)
 
-                penalty = penalty_vector(self.theta, self.l1_ratio)
-                gradient = gradient_vector(self.theta)
+                penalty = penalty_vector(self.model.theta, self.l1_ratio)
+                gradient = gradient_vector(self.model.theta)
 
                 self.model.theta = self.model.theta - eta * (gradient + self.alpha * penalty)
 
@@ -121,8 +135,6 @@ class SgdRegressor(object):
             A numpy array containing the predicted values.
         """
         X = np_utils.insert_intercept(X)
-
-        #h = make_h(self.theta)
 
         return self.model.h(X)
 
