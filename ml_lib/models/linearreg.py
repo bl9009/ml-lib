@@ -30,7 +30,7 @@ class LinearRegressor(object):
         """
         self.alpha = alpha
 
-        self.theta = None
+        self.model = None
 
     def fit(self, X, y):
         """Fits the model.
@@ -41,7 +41,7 @@ class LinearRegressor(object):
         """
         A = np.identity(np_utils.feature_count(X))
 
-        self.theta = np.linalg.inv(X.T.dot(X) + self.alpha * A).dot(X.T.dot(y))
+        self.model.theta = np.linalg.inv(X.T.dot(X) + self.alpha * A).dot(X.T.dot(y))
 
     def predict(self, X):
         """Performs predictions based on fitted model.
@@ -52,9 +52,7 @@ class LinearRegressor(object):
         Returns:
             A numpy array containing the predicted values.
         """
-        h = make_h(self.theta)
-
-        return h(X)
+        return self.model.h(X)
 
 
 class SgdRegressor(object):
