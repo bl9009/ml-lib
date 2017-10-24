@@ -56,7 +56,7 @@ class SgdRegressor(object):
         theta: Parameters for linear hypothesis.
     """
 
-    def __init__(self, eta0=0.01, annealing=0.25, epochs=100, alpha=0., l1_ratio=1.):
+    def __init__(self, eta0=0.01, annealing=0.25, epochs=100, alpha=0., l1_ratio=1., debug=False):
         """Initializes Regressor with hyperparameters.
 
         Regularizes model with elastic net by setting regularization factor
@@ -75,6 +75,8 @@ class SgdRegressor(object):
         self.epochs = epochs
         self.alpha = alpha
         self.l1_ratio = l1_ratio
+
+        self.debug = debug
 
         self.theta = None
 
@@ -97,12 +99,15 @@ class SgdRegressor(object):
             for i in range(m):
                 eta = self.__learning_schedule(epoch * m + i + 1)
 
-                #l1_penalty = self.alpha * lasso_vector(self.theta)
-                #l2_penalty = self.alpha * ridge_vector(self.theta)
+                l1_penalty = self.alpha * lasso_vector(self.theta)
+                l2_penalty = self.alpha * ridge_vector(self.theta)
 
-                ##penalty = self.l1_ratio * l1_penalty + (1. - self.l1_ratio) / 2. * l2_penalty
+                penalty = self.l1_ratio * l1_penalty + (1. - self.l1_ratio) / 2. * l2_penalty
 
-                self.theta = self.theta - eta * gradient_vector(self.theta)# + penalty
+                self.theta = self.theta - eta * gradient_vector(self.theta) + penalty
+
+                if self.debug:
+                    yield
 
     def predict(self, X):
         """Performs predictions based on fitted model.
@@ -181,7 +186,7 @@ def make_mse_gradient_vector(X, y):
         x_i = X[index:index+1]
         y_i = y[index:index+1]
 
-        return 2./m * x_i.T.dot(h(x_i) - y_i).T
+        return 2 * x_i.T.dot(h(x_i) - y_i).T
 
     return mse_gradient_vector
 
