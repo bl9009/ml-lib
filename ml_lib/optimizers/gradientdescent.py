@@ -6,14 +6,14 @@ import numpy_utils as np_utils
 
 class StochasticGradientDescent(object):
     """Stochastic Gradient Descent optimization.
-    
+
     Attributes:
         X: mxn matrix representing training set where m is the number of
         instances and n is the number of features.
         y: vector with m values as training labels.
     """
 
-    def __init__(self, X, y):
+    def __init__(self, X, y, regularizer=None):
         self.X = X
         self.y = y
 
@@ -27,7 +27,9 @@ class StochasticGradientDescent(object):
         Returns:
             Model object with updated parameters theta.
         """
-        model.theta = model.theta - eta * gradient_vector(model)
+        penalty = regularizer.penalty(model) if self.regularizer not None else 0.
+
+        model.theta = model.theta - eta * gradient_vector(model) + penalty
 
         return model
 
