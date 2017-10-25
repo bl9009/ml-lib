@@ -33,7 +33,7 @@ class LinearRegressor(object):
         """
         A = np.identity(np_utils.feature_count(X))
 
-        self.theta = np.linalg.inv(X.T.dot(X) + self.alpha * A).dot(X.T.dot(y))
+        self.theta = np.linalg.inv(X.T.dot(X) + self.alpha * A).dot(X.T.dot(y)).T
 
     def predict(self, X):
         """Performs predictions based on fitted model.
