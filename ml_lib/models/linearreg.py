@@ -13,7 +13,6 @@ class LinearRegressor(object):
     Attributes:
         theta: Paramaters for linear hypothesis.
     """
-
     def __init__(self, alpha=0.):
         """Initializes Regressor.
 
@@ -55,8 +54,7 @@ class SgdRegressor(object):
     Attributes:
         theta: Parameters for linear hypothesis.
     """
-
-    def __init__(self, eta0=0.01, annealing=0.25, epochs=100, alpha=0., l1_ratio=1., debug=False):
+    def __init__(self, eta0=0.01, annealing=0.25, epochs=100, alpha=0., l1_ratio=1.):
         """Initializes Regressor with hyperparameters.
 
         Regularizes model with elastic net by setting regularization factor
@@ -75,8 +73,6 @@ class SgdRegressor(object):
         self.epochs = epochs
         self.alpha = alpha
         self.l1_ratio = l1_ratio
-
-        self.debug = debug
 
         self.theta = None
 
@@ -105,9 +101,6 @@ class SgdRegressor(object):
                 penalty = self.l1_ratio * l1_penalty + (1. - self.l1_ratio) / 2. * l2_penalty
 
                 self.theta = self.theta - eta * gradient_vector(self.theta) + penalty
-
-                if self.debug:
-                    yield
 
     def predict(self, X):
         """Performs predictions based on fitted model.
