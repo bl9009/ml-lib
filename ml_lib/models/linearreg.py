@@ -18,7 +18,7 @@ class LinearRegressor(object):
         """Initializes Regressor.
 
         Args:
-            alpha: Regularization factor for ridge regression
+            alpha: Regularization factor for ridge regularization.
         """
         self.alpha = alpha
 
