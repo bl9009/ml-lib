@@ -2,6 +2,8 @@
 
 import math
 
+import numpy as np
+
 def mse(y, y_predicted):
     """Calculates MSE of given target and predicted values.
 
@@ -12,10 +14,10 @@ def mse(y, y_predicted):
     Returns:
         The MSE.
     """
-    m = y.size()
+    m = y.size
 
-    return (1./(2. * m)) * sum((y_predicted - y) ** 2)
-    
+    return (1./(2. * m)) * sum(np.square(y_predicted - y))
+
 def rmse(y, y_predicted):
     """Calculates RMSE of given target and predicted values.
 

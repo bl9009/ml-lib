@@ -1,3 +1,7 @@
+[MASTER]
+extension-pkg-whitelist=numpy
+
+disable=too-many-arguments
+
 [BASIC]
-# Ignore short but good variable names
-good-names=A,h,i,m,t,X,x,y,new_X
+good-names=A,h,i,j,m,n,t,X,x,y,new_X,X_poly

@@ -13,12 +13,11 @@ class LinearRegressor(object):
     Attributes:
         theta: Paramaters for linear hypothesis.
     """
-
     def __init__(self, alpha=0.):
         """Initializes Regressor.
 
         Args:
-            alpha: Regularization factor for ridge regression
+            alpha: Regularization factor for ridge regularization.
         """
         self.alpha = alpha
 
@@ -33,7 +32,7 @@ class LinearRegressor(object):
         """
         A = np.identity(np_utils.feature_count(X))
 
-        self.theta = np.linalg.inv(X.T.dot(X) + self.alpha * A).dot(X.T.dot(y))
+        self.theta = np.linalg.inv(X.T.dot(X) + self.alpha * A).dot(X.T.dot(y)).T
 
     def predict(self, X):
         """Performs predictions based on fitted model.
@@ -55,7 +54,6 @@ class SgdRegressor(object):
     Attributes:
         theta: Parameters for linear hypothesis.
     """
-
     def __init__(self, eta0=0.01, annealing=0.25, epochs=100, alpha=0., l1_ratio=1.):
         """Initializes Regressor with hyperparameters.
 
@@ -97,12 +95,12 @@ class SgdRegressor(object):
             for i in range(m):
                 eta = self.__learning_schedule(epoch * m + i + 1)
 
-                #l1_penalty = self.alpha * lasso_vector(self.theta)
-                #l2_penalty = self.alpha * ridge_vector(self.theta)
+                l1_penalty = self.alpha * lasso_vector(self.theta)
+                l2_penalty = self.alpha * ridge_vector(self.theta)
 
-                ##penalty = self.l1_ratio * l1_penalty + (1. - self.l1_ratio) / 2. * l2_penalty
+                penalty = self.l1_ratio * l1_penalty + (1. - self.l1_ratio) / 2. * l2_penalty
 
-                self.theta = self.theta - eta * gradient_vector(self.theta)# + penalty
+                self.theta = self.theta - eta * gradient_vector(self.theta) + penalty
 
     def predict(self, X):
         """Performs predictions based on fitted model.
@@ -181,7 +179,7 @@ def make_mse_gradient_vector(X, y):
         x_i = X[index:index+1]
         y_i = y[index:index+1]
 
-        return 2./m * x_i.T.dot(h(x_i) - y_i).T
+        return 2 * x_i.T.dot(h(x_i) - y_i).T
 
     return mse_gradient_vector
 
