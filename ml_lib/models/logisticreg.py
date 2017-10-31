@@ -5,10 +5,7 @@ import numpy as np
 from sgdreg import SgdRegressor
 
 class LogisticRegressor(SgdRegressor):
-    """Logistic regression algorithm.
-
-        Provides a logistic regression model using the sigmoid function.
-    """
+    """Logistic regression model using the sigmoid function."""
 
     def h(self, x):
         """Hypothesis function h(x) used to make predictions.

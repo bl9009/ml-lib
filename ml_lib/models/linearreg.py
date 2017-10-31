@@ -63,11 +63,7 @@ class LinearRegressor(object):
 
 
 class LinearSgdRegressor(SgdRegressor):
-    """Linear Regression model using stochastic gradient descent for learning.
-
-    Attributes:
-        theta: Parameters for linear hypothesis.
-    """
+    """Linear Regression model using stochastic gradient descent for learning."""
 
     def h(self, x):
         """Hypothesis function h(x) used to make predictions.
