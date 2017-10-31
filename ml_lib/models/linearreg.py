@@ -54,7 +54,13 @@ class SgdRegressor(object):
     Attributes:
         theta: Parameters for linear hypothesis.
     """
-    def __init__(self, eta0=0.01, annealing=0.25, epochs=100, alpha=0., l1_ratio=1.):
+    def __init__(
+            self,
+            eta0=0.01,
+            annealing=0.25,
+            epochs=100,
+            alpha=0.,
+            l1_ratio=1.):
         """Initializes Regressor with hyperparameters.
 
         Regularizes model with elastic net by setting regularization factor
