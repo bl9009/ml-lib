@@ -1,3 +1,5 @@
+"""Super class for SGD regression models."""
+
 import abc
 
 import numpy as np
@@ -5,6 +7,11 @@ import numpy as np
 from ..utils import numpy_utils as np_utils
 
 class SgdRegressor(object):
+    """Abstract super class for SGD regression models.
+
+    Attributes:
+        theta: Parameters for linear hypothesis.
+    """
 
     __metaclass__ = abc.ABCMeta
 
@@ -49,7 +56,7 @@ class SgdRegressor(object):
 
         m = np_utils.instance_count(X)
 
-        gradient_vector = self.make_loss_gradient_vector(X, y)
+        gradient_vector = self.__make_loss_gradient_vector(X, y)
 
         for epoch in range(self.epochs):
             for i in range(m):
@@ -60,7 +67,7 @@ class SgdRegressor(object):
 
                 penalty = self.l1_ratio * l1_penalty + (1. - self.l1_ratio) / 2. * l2_penalty
 
-                self.theta = self.theta - eta * gradient_vector(self.theta) + penalty
+                self.theta = self.theta - eta * gradient_vector(self) + penalty
 
     def predict(self, X):
         """Performs predictions based on fitted model.
@@ -108,7 +115,7 @@ class SgdRegressor(object):
         Returns:
             Function to calculate gradient vector of MSE function.
         """
-        def loss_gradient_vector(self, theta):
+        def loss_gradient_vector(self):
             """Calculates the gradient vector of loss function.
 
             Args:

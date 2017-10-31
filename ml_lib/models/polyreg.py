@@ -9,7 +9,7 @@ import numpy as np
 
 from ..utils import numpy_utils as np_utils
 
-from .linearreg import LinearRegressor, SgdRegressor
+from .linearreg import LinearRegressor, LinearSgdRegressor
 
 class PolynomialRegressor(LinearRegressor):
     """Polynomaial Regression that is trained on polynomial features. A linear
@@ -49,7 +49,7 @@ class PolynomialRegressor(LinearRegressor):
 
         return super(PolynomialRegressor, self).predict(X_poly)
 
-class PolynomialSgdRegressor(SgdRegressor):
+class PolynomialSgdRegressor(LinearSgdRegressor):
     """Polynomaial Regression that is trained on polynomial features. A linear
     regression model based on stochastic gradient descent is used for training
     and prediction.

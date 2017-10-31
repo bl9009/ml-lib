@@ -4,4 +4,4 @@ extension-pkg-whitelist=numpy
 disable=too-many-arguments
 
 [BASIC]
-good-names=A,h,i,j,m,n,t,X,x,y,new_X,X_poly
+good-names=A,h,i,j,m,n,t,X,x,y,new_X,X_poly,z
