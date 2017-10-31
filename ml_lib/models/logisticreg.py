@@ -1,18 +1,16 @@
-class LogisticRegressor(object):
+import numpy as np
 
-    def __init__(self):
-        self.theta = None
+from .utils import numpy_utils as np_utils
 
-    def fit(self, X, y):
-        self.theta = np.ones((1, np_utils.feature_count(X)))
+from sgdreg import SgdRegressor
 
-    def predict(self, X):
-        pass
+class LogisticRegressor(SgdRegressor):
 
-    def h(self, x):
-        return sigmoid(self.theta, x)
+    def h(self, x):        
+        z = theta.T.dot(x) 
 
-def sigmoid(theta, x):
-    z = theta.T.dot(x)
+        return sigmoid(z)
 
-    return 1. / (1 - exp(-z))
+
+def sigmoid(z):
+    return 1. / (1 + np.exp(-z))
