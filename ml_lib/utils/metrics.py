@@ -42,3 +42,21 @@ def rss(y, y_predicted):
         Residual sum of squares.
     """
     return sum((y_predicted - y) ** 2)
+
+def log_loss(y, y_predicted):
+    """Calculate the log loss function for given target and
+    predicted values.
+
+    This is used for estimating the loss for logistic models.
+
+    Args:
+        y: Ground truth.
+        y_predicted: Predicted values.
+
+    Returns:
+        Log loss error.
+    """
+    m = y.size
+
+    return (-1./m) * sum(y.T.dot(np.log(y_predicted))
+                         + (1-y).T.dot(np.log(1-y_predicted)))
