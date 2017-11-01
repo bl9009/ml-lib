@@ -6,15 +6,12 @@ import numpy as np
 
 from ..utils import numpy_utils as np_utils
 
-class SgdRegressor(object):
+class SgdRegressor(abc.ABC):
     """Abstract super class for SGD regression models.
 
     Attributes:
         theta: Parameters for linear hypothesis.
     """
-
-    __metaclass__ = abc.ABCMeta
-
     def __init__(
             self,
             eta0=0.01,
