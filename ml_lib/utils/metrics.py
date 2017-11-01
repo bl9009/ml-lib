@@ -16,7 +16,7 @@ def mse(y, y_predicted):
     """
     m = y.size
 
-    return (1./(2. * m)) * sum(np.square(y_predicted - y))
+    return (1./m) * sum(np.square(y_predicted - y))
 
 def rmse(y, y_predicted):
     """Calculates RMSE of given target and predicted values.
