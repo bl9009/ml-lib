@@ -1,8 +1,8 @@
 """Logistic classification model."""
 
-from logisticreg import LogisticRegression
+from logisticreg import LogisticRegressor
 
-class LogisticClassifier(LogisticRegression):
+class LogisticClassifier(LogisticRegressor):
     """Classification model based on Logistic Regression."""
 
     def __init__(
