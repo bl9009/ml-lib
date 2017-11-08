@@ -1,7 +1,7 @@
 [MASTER]
 extension-pkg-whitelist=numpy
 
-disable=too-many-arguments
+disable=too-many-arguments,too-few-public-methods
 
 [BASIC]
-good-names=A,h,i,j,m,n,t,X,x,y,new_X,X_poly,z
+good-names=A,a,b,h,i,j,K,m,n,r,t,X,x,y,new_X,X_poly,z
