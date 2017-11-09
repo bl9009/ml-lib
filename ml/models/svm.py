@@ -14,7 +14,8 @@ class SVM(object):
             kernel: Instance of a kernel.
             C: Soft margin penalty.
         """
-        pass
+        self.kernel = kernel
+        self.C = C
 
     def fit(self, X, y):
         """Fits the model parameters.
