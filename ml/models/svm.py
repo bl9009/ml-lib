@@ -8,7 +8,12 @@ class SVM(object):
     """SVM classification model."""
 
     def __init__(self, kernel=LinearKernel(), C=1.0):
-        """Initializes classifier with hyperparameters."""
+        """Initializes classifier with hyperparameters.
+        
+        Args:
+            kernel: Instance of a kernel.
+            C: Soft margin penalty.
+        """
         pass
 
     def fit(self, X, y):
