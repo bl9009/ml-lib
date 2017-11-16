@@ -9,7 +9,7 @@ class SVM(object):
 
     def __init__(self, kernel=LinearKernel(), C=1.0):
         """Initializes classifier with hyperparameters.
-        
+
         Args:
             kernel: Instance of a kernel.
             C: Soft margin penalty.
