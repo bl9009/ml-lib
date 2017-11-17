@@ -19,9 +19,13 @@ class DecisionTreeClassifier(object):
             X: Training data set.
             y: Labels.
         """
-        m = np_utils.instance_count(y)
+        for j, feature in enumerate(X.T):
+            for i, instance in enumerate(X):
+                left, right = self.__split(X, i, X[i, j])
 
-        label_counts = np.bincount(y)
+                # best_gain = self.__gini(left)
+                # best_split = BinaryTree.Node(j, threshold, gini, samples)
+
 
     def predict(self, X):
         """Performs predictions based on fitted model.
@@ -38,6 +42,40 @@ class DecisionTreeClassifier(object):
             label = self.tree.find(x)
 
             results[i] = label
+
+    def __split(self, X, feature_id, threshold):
+        """Split the data set X by evaluating feature_id over threshold.
+
+        Args:
+            X: Training data set to split.
+            feature_id: Feature used to split the set.
+            threshold: Threshold used to split the set.
+
+        Returns:
+            Two splitted data sets as numpy arrays.
+        """
+        left = [X[:, feature_id] <= threshold]
+        right = [X[:, feature_id] > threshold]
+
+        return left, right
+
+    def __gini(self, X, y):
+        """Calculate gini impurity of given data set X.
+
+        Args:
+            X: Training data set.
+            y: Label set
+
+        Returns:
+            Gini impurity as float.
+        """
+        m = np_utils.instance_count(X)
+
+        label_counts = np_utils.label_counts(y)
+
+        return 1 - sum([(n / m)**2 for n in label_counts])
+
+
 
 
 class BinaryTree(object):
