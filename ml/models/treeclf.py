@@ -19,13 +19,7 @@ class DecisionTreeClassifier(object):
             X: Training data set.
             y: Labels.
         """
-        for j, feature in enumerate(X.T):
-            for i, instance in enumerate(X):
-                left, right = self.__split(X, i, X[i, j])
-
-                # best_gain = self.__gini(left)
-                # best_split = BinaryTree.Node(j, threshold, gini, samples)
-
+        self.tree.root = self.__grow_tree(X, y)
 
     def predict(self, X):
         """Performs predictions based on fitted model.
@@ -43,7 +37,64 @@ class DecisionTreeClassifier(object):
 
             results[i] = label
 
-    def __split(self, X, feature_id, threshold):
+    def __grow_tree(self, X, y):
+        """Builds the decision tree by recursively finding the best split.
+
+        Args:
+            X: Data set to split.
+            y: Labels.
+
+        Returns:
+            A BinaryTree.Node object representing one node within the
+            decision tree.
+        """
+        best_gini = 0.
+
+        best_feature_id = 0
+
+        best_threshold = 0.
+
+        best_left_X = None
+        best_left_y = None
+
+        best_right_X = None
+        best_right_y = None
+
+        for j, in enumerate(X.T):
+            for instance in X:
+                split = self.__split(X,
+                                     y,
+                                     feature_id=j,
+                                     threshold=instance[j])
+
+                left_X, left_y, right_X, right_y = split
+
+                gini_left = self.__gini(left_X, left_y)
+                gini_right = self.__gini(right_X, right_y)
+
+                if gini_left > best_gini or gini_right > best_gini:
+                    best_feature_id = j
+
+                    best_threshold = instance[j]
+
+                    best_gini = max(gini_left, gini_right)
+
+                    best_left_X = left_X
+                    best_left_y = left_y
+
+                    best_right_X = left_X
+                    best_right_y = left_y
+
+        node = BinaryTree.Node(best_feature_id,
+                               best_threshold,
+                               best_gini)
+
+        node.left = self.__grow_tree(best_left_X, best_left_y)
+        node.right = self.__grow_tree(best_right_X, best_right_y)
+
+        return node
+
+    def __split(self, X, y, feature_id, threshold):
         """Split the data set X by evaluating feature_id over threshold.
 
         Args:
@@ -54,10 +105,15 @@ class DecisionTreeClassifier(object):
         Returns:
             Two splitted data sets as numpy arrays.
         """
-        left = [X[:, feature_id] <= threshold]
-        right = [X[:, feature_id] > threshold]
+        mask = X[:, feature_id] <= threshold
 
-        return left, right
+        left_X = X[mask]
+        left_y = y[mask]
+
+        right_X = X[not mask]
+        right_y = y[not mask]
+
+        return left_X, left_y, right_X, right_y
 
     def __gini(self, X, y):
         """Calculate gini impurity of given data set X.
@@ -110,7 +166,7 @@ class BinaryTree(object):
         def set_left(self, node):
             """Set the left child node."""
 
-            # decision trees grow top down, so no nodes
+            # decision trees grow top down, so _no_ nodes
             # will be added in between
             self.left = node
 
