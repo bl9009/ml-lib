@@ -70,9 +70,6 @@ class TestBinaryTree(unittest.TestCase):
         self.assertFalse(tree.root.left.is_leaf())
         self.assertTrue(tree.root.left.left.is_leaf())
 
-    def test_find(self):
-        pass
-
 
 def data_set():
     X = np.array([[1, 2, 3],

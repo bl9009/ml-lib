@@ -37,7 +37,7 @@ class DecisionTreeClassifier(object):
 
             results[i] = label
 
-    def __grow_tree(self, X, y):
+    def _grow_tree(self, X, y):
         """Builds the decision tree by recursively finding the best split.
 
         Args:
@@ -131,7 +131,19 @@ class DecisionTreeClassifier(object):
 
         return 1 - sum([(n / m)**2 for n in label_counts])
 
+    def _evaluate(self, x):
+    """Evaluate feature vector x against the decision tree.
 
+    Args:
+        x: Numpy array with features.
+    """
+    current = self.tree.root
+
+    while not current.is_leaf():
+        if x[current.feature_id] <= current.threshold:
+            current = current.left
+        else:
+            current = current.right
 
 
 class BinaryTree(object):
@@ -184,17 +196,3 @@ class BinaryTree(object):
     def __init__(self):
         """Initialize binary tree."""
         self.root = self.Node()
-
-    def find(self, x):
-        """Find node with class fitting given feature vector.
-
-        Args:
-            x: Numpy array with features.
-        """
-        current = self.root
-
-        while not current.is_leaf():
-            if x[current.feature_id] <= current.threshold:
-                current = current.left
-            else:
-                current = current.right
