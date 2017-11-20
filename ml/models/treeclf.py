@@ -178,9 +178,12 @@ class BinaryTree(object):
             """Check if node is a leaf."""
             return self.left is None and self.right is None
 
+        def __eq__(self, other):
+            return self.__dict__ == other.__dict__
+
     def __init__(self):
         """Initialize binary tree."""
-        self.root = Node()
+        self.root = self.Node()
 
     def find(self, x):
         """Find node with class fitting given feature vector.
