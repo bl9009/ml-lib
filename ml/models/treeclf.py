@@ -8,9 +8,11 @@ class DecisionTreeClassifier(object):
     """Decision Tree classification model that is trained with the CART
     algorithm."""
 
-    def __init__(self):
+    def __init__(self, max_depth=5):
         """Initialize Decision Tree model."""
         self.tree = BinaryTree()
+
+        self.max_depth = max_depth
 
     def fit(self, X, y):
         """Fits the Decision Tree model.
@@ -19,7 +21,7 @@ class DecisionTreeClassifier(object):
             X: Training data set.
             y: Labels.
         """
-        self.tree.root = self.__grow_tree(X, y)
+        self.tree.root = self._grow_tree(X, y)
 
     def predict(self, X):
         """Performs predictions based on fitted model.
@@ -32,8 +34,8 @@ class DecisionTreeClassifier(object):
         """
         results = np.ndarray(np_utils.instance_count(X))
 
-        for i, x in enumerate(X):
-            label = self.tree.find(x)
+        for i, x_i in enumerate(X):
+            label = self._evaluate(x_i)
 
             results[i] = label
 
@@ -62,15 +64,15 @@ class DecisionTreeClassifier(object):
 
         for j, in enumerate(X.T):
             for instance in X:
-                split = self.__split(X,
-                                     y,
-                                     feature_id=j,
-                                     threshold=instance[j])
+                split = self._split(X,
+                                    y,
+                                    feature_id=j,
+                                    threshold=instance[j])
 
                 left_X, left_y, right_X, right_y = split
 
-                gini_left = self.__gini(left_X, left_y)
-                gini_right = self.__gini(right_X, right_y)
+                gini_left = self._gini(left_X, left_y)
+                gini_right = self._gini(right_X, right_y)
 
                 if gini_left > best_gini or gini_right > best_gini:
                     best_feature_id = j
@@ -89,8 +91,12 @@ class DecisionTreeClassifier(object):
                                best_threshold,
                                best_gini)
 
-        node.left = self.__grow_tree(best_left_X, best_left_y)
-        node.right = self.__grow_tree(best_right_X, best_right_y)
+        if tree.depth < self.max_depth:
+            if np_utils.instance_count(best_left_X) > 1:
+                node.left = self._grow_tree(best_left_X, best_left_y)
+
+            if np_utils.instance_count(best_right_X) > 1:
+                node.right = self._grow_tree(best_right_X, best_right_y)
 
         return node
 
@@ -132,18 +138,18 @@ class DecisionTreeClassifier(object):
         return 1 - sum([(n / m)**2 for n in label_counts])
 
     def _evaluate(self, x):
-    """Evaluate feature vector x against the decision tree.
+        """Evaluate feature vector x against the decision tree.
 
-    Args:
-        x: Numpy array with features.
-    """
-    current = self.tree.root
+        Args:
+            x: Numpy array with features.
+        """
+        current = self.tree.root
 
-    while not current.is_leaf():
-        if x[current.feature_id] <= current.threshold:
-            current = current.left
-        else:
-            current = current.right
+        while not current.is_leaf():
+            if x[current.feature_id] <= current.threshold:
+                current = current.left
+            else:
+                current = current.right
 
 
 class BinaryTree(object):
@@ -191,6 +197,11 @@ class BinaryTree(object):
             return self.left is None and self.right is None
 
         def __eq__(self, other):
+            """Check if object is equal to other.
+
+            Args:
+                other: Object to check.
+            """
             return self.__dict__ == other.__dict__
 
     def __init__(self):
