@@ -94,7 +94,7 @@ class DecisionTreeClassifier(object):
 
         return node
 
-    def __split(self, X, y, feature_id, threshold):
+    def _split(self, X, y, feature_id, threshold):
         """Split the data set X by evaluating feature_id over threshold.
 
         Args:
@@ -110,12 +110,12 @@ class DecisionTreeClassifier(object):
         left_X = X[mask]
         left_y = y[mask]
 
-        right_X = X[not mask]
-        right_y = y[not mask]
+        right_X = X[np.logical_not(mask)]
+        right_y = y[np.logical_not(mask)]
 
         return left_X, left_y, right_X, right_y
 
-    def __gini(self, X, y):
+    def _gini(self, X, y):
         """Calculate gini impurity of given data set X.
 
         Args:
