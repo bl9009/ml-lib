@@ -38,10 +38,22 @@ class TestDecisionTreeClassifier(unittest.TestCase):
 
 class TestBinaryTree(unittest.TestCase):
 
+    def test_eq(self):
+        node1 = BinaryTree.Node()
+        node2 = BinaryTree.Node()
+        node3 = BinaryTree.Node(feature_id=1)
+
+        self.assertTrue(node1 == node2)
+        self.assertTrue(node1 != node3)
+
     def test_add_node(self):
         tree = BinaryTree()
 
-        tree.root = Node()
+        left_node = BinaryTree.Node()
+        right_node = BinaryTree.Node()
+
+        tree.root.set_left(left_node)
+        tree.root.set_right(right_node)
 
     def test_is_leaf(self):
         pass
