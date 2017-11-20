@@ -180,7 +180,7 @@ class BinaryTree(object):
 
     def __init__(self):
         """Initialize binary tree."""
-        self.root = None
+        self.root = Node()
 
     def find(self, x):
         """Find node with class fitting given feature vector.
