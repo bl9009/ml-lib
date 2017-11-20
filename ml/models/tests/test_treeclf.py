@@ -49,17 +49,30 @@ class TestBinaryTree(unittest.TestCase):
     def test_add_node(self):
         tree = BinaryTree()
 
-        left_node = BinaryTree.Node()
-        right_node = BinaryTree.Node()
+        left_node = BinaryTree.Node(feature_id=1)
+        right_node = BinaryTree.Node(feature_id=5)
 
         tree.root.set_left(left_node)
         tree.root.set_right(right_node)
 
+        self.assertEqual(tree.root.left, left_node)
+        self.assertEqual(tree.root.right, right_node)
+
     def test_is_leaf(self):
-        pass
+        tree = BinaryTree()
+
+        node1 = BinaryTree.Node()
+        node2 = BinaryTree.Node()
+
+        tree.root.set_left(node1)
+        tree.root.left.set_left(node2)
+
+        self.assertFalse(tree.root.left.is_leaf())
+        self.assertTrue(tree.root.left.left.is_leaf())
 
     def test_find(self):
         pass
+
 
 def data_set():
     X = np.array([[1, 2, 3],
