@@ -97,7 +97,7 @@ class DecisionTreeClassifier(object):
 
         best_split = None
 
-        for feature, in enumerate(X.T):
+        for feature, _ in enumerate(X.T):
             for instance in X:
                 split = self._split(X,
                                     y,
