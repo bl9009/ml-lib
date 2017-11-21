@@ -16,13 +16,29 @@ class TestDecisionTreeClassifier(unittest.TestCase):
     def test_split(self):
         X, y, _ = data_set()
 
-        test_split = data_set_splitted_1_5()
+        test_split = data_set_splitted_1_18()
 
         test_left_X, test_left_y, test_right_X, test_right_y = test_split
 
         clf = DecisionTreeClassifier()
 
-        split = clf._split(X, y, feature_id=1, threshold=5)
+        split = clf._split(X, y, feature_id=1, threshold=18)
+
+        self.assertArraysEqual(split.left_X, test_left_X)
+        self.assertArraysEqual(split.left_y, test_left_y)
+        self.assertArraysEqual(split.right_X, test_right_X)
+        self.assertArraysEqual(split.right_y, test_right_y)
+
+    def test_best_split(self):
+        X, y, _ = data_set()
+
+        test_split = data_set_best_split()
+
+        test_left_X, test_left_y, test_right_X, test_right_y = test_split
+
+        clf = DecisionTreeClassifier()
+
+        split = clf._find_best_split(X, y)
 
         self.assertArraysEqual(split.left_X, test_left_X)
         self.assertArraysEqual(split.left_y, test_left_y)
@@ -30,13 +46,7 @@ class TestDecisionTreeClassifier(unittest.TestCase):
         self.assertArraysEqual(split.right_y, test_right_y)
 
     def test_grow_tree(self):
-        X = np.array([[12, 34, 62],
-                      [3, 86, 28],
-                      [42, 18, 81],
-                      [23, 52, 21],
-                      [14, 16, 42]])
-
-        y = np.array([1, 1, 0, 0, 1])
+        pass
 
     def assertArraysEqual(self, X1, X2):
         # workaround to assert numpy arrays
@@ -79,11 +89,19 @@ class TestBinaryTree(unittest.TestCase):
 
 
 def data_set():
-    X = np.array([[1, 2, 3],
-                  [4, 5, 6],
-                  [7, 8, 9],
-                  [3, 5, 7],
-                  [8, 1, 2]])
+    X = np.array([[12, 34, 62],
+                  [3, 86, 28],
+                  [42, 18, 81],
+                  [23, 52, 21],
+                  [14, 16, 42]])
+
+    y = np.array([1, 1, 0, 0, 1])
+
+    #X = np.array([[1, 2, 3],
+    #              [4, 5, 6],
+    #              [7, 8, 9],
+    #              [3, 5, 7],
+    #              [8, 1, 2]])
 
     #y = np.array([[0],
     #             [1],
@@ -91,35 +109,40 @@ def data_set():
     #             [0],
     #             [1]])
 
-    y = np.array([0, 1, 1, 0, 1])
+    #y = np.array([0, 1, 1, 0, 1])
 
     gini = 0.48
 
     return X, y, gini
 
-def data_set_splitted_1_5():
-    # data set splitted at feature 1 and threshold 5
-    left_X = np.array([[1, 2, 3],
-                       [4, 5, 6],
-                       [3, 5, 7],
-                       [8, 1, 2]])
+def data_set_splitted_1_18():
+    # data set splitted at feature 1 and threshold 18
+    left_X = np.array([[42, 18, 81],
+                       [14, 16, 42]])
 
-    right_X = np.array([[7, 8, 9]])
+    right_X = np.array([[12, 34, 62],
+                        [3, 86, 28],
+                        [23, 52, 21]])
 
-    left_y = np.array([0, 1, 0, 1])
+    left_y = np.array([0, 1])
 
-    right_y = np.array([1])
+    right_y = np.array([1, 1, 0])
 
     return left_X, left_y, right_X, right_y
 
-def data_set_splitted_0_8():
-    # data set splitted at feature 0 and threshold 8
-    pass
+def data_set_best_split():
+    left_X = np.array([[12, 34, 62],
+                       [3, 86, 28],
+                       [14, 16,42]])
 
-def data_set_splitted_2_1():
-    # data set splitted at feature 2 and threshold 1
-    pass
+    right_X = np.array([[42, 18, 81],
+                        [23, 52, 21]])
 
+    left_y = np.array([1, 1, 1])
+
+    right_y = np.array([0, 0])
+
+    return left_X, left_y, right_X, right_y
 
 def generate_data(m, n, seed):
     np.random.seed(seed)
