@@ -11,6 +11,7 @@ class DecisionTreeClassifier(object):
     def __init__(self, max_depth=5):
         """Initialize Decision Tree model."""
         self.tree = BinaryTree()
+        self.depth = 0
 
         self.max_depth = max_depth
 
@@ -21,7 +22,7 @@ class DecisionTreeClassifier(object):
             X: Training data set.
             y: Labels.
         """
-        self.tree.root = self._grow_tree(X, y)
+        self.tree.root, self.depth = self._grow_tree(X, y)
 
     def predict(self, X):
         """Performs predictions based on fitted model.
@@ -39,8 +40,11 @@ class DecisionTreeClassifier(object):
 
             results[i] = label
 
-    def _grow_tree(self, X, y):
+    def _grow_tree(self, X, y, depth=0):
         """Builds the decision tree by recursively finding the best split.
+
+        In parallel it returns the depth of the current node, so it is not
+        necessary to determine the depth recursively afterwards.
 
         Args:
             X: Data set to split.
@@ -49,6 +53,8 @@ class DecisionTreeClassifier(object):
         Returns:
             A BinaryTree.Node object representing one node within the
             decision tree.
+
+            The depth of the returned node.
         """
         best_gini = 0.
 
@@ -91,14 +97,14 @@ class DecisionTreeClassifier(object):
                                best_threshold,
                                best_gini)
 
-        if tree.depth < self.max_depth:
+        if depth < self.max_depth:
             if np_utils.instance_count(best_left_X) > 1:
-                node.left = self._grow_tree(best_left_X, best_left_y)
+                node.left, depth_left = self._grow_tree(best_left_X, best_left_y, depth+1)
 
             if np_utils.instance_count(best_right_X) > 1:
-                node.right = self._grow_tree(best_right_X, best_right_y)
+                node.right, depth_right = self._grow_tree(best_right_X, best_right_y, depth+1)
 
-        return node
+        return node, max(depth_left, depth_right)
 
     def _split(self, X, y, feature_id, threshold):
         """Split the data set X by evaluating feature_id over threshold.
