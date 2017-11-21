@@ -3,6 +3,7 @@
 import numpy as np
 
 from ..utils import numpy_utils as np_utils
+from ..utils import metrics
 
 class DecisionTreeClassifier(object):
     """Decision Tree classification model that is trained with the CART
@@ -56,17 +57,45 @@ class DecisionTreeClassifier(object):
 
             The depth of the returned node.
         """
+        gini = metrics.gini(X, y)
+
+        if gini != 0.:
+            split = self._find_best_split(X, y)
+
+        node = BinaryTree.Node(split.feature_id,
+                               split.threshold,
+                               label=np.argmax(np_utils.label_counts(y)))
+
+        depth_left, depth_right = 0, 0
+
+        if gini != 0. and depth < self.max_depth:
+            if np_utils.instance_count(split.left_X) > 1:
+                node.left, depth_left = self._grow_tree(split.left_X,
+                                                        split.left_y,
+                                                        depth+1)
+
+            if np_utils.instance_count(split.right_X) > 1:
+                node.right, depth_right = self._grow_tree(split.right_X,
+                                                          split.right_y,
+                                                          depth+1)
+
+        return node, max(depth_left, depth_right, depth)
+
+    def _find_best_split(self, X, y):
+        """Splits the dataset X such that both subsets have the best gini
+        impurity.
+
+        Args:
+            X: Dataset to split.
+            y: Labels to split.
+
+        Returns:
+            A tuple of arrays representing the splitted subsets of features and
+            labels.
+        """
         best_gini = 0.
 
-        best_feature_id = 0
-
-        best_threshold = 0.
-
-        best_left_X = None
-        best_left_y = None
-
-        best_right_X = None
-        best_right_y = None
+        best_split = None
 
         for feature, in enumerate(X.T):
             for instance in X:
@@ -75,40 +104,15 @@ class DecisionTreeClassifier(object):
                                     feature_id=feature,
                                     threshold=instance[feature])
 
-                left_X, left_y, right_X, right_y = split
+                gini_left = metrics.gini(split.left_X, split.left_y)
+                gini_right = metrics.gini(split.right_X, split.right_y)
 
-                gini_left = self._gini(left_X, left_y)
-                gini_right = self._gini(right_X, right_y)
+                if (gini_left + gini_right) <= best_gini:
+                    best_gini = gini_left + gini_right
 
-                # maybe better: (gini_left + gini_right) <= best_gini ???
-                if gini_left <= best_gini and gini_right <= best_gini:
-                    best_feature_id = feature
+                    best_split = split
 
-                    best_threshold = instance[feature]
-
-                    best_gini = max(gini_left, gini_right)
-
-                    best_left_X = left_X
-                    best_left_y = left_y
-
-                    best_right_X = left_X
-                    best_right_y = left_y
-
-        node = BinaryTree.Node(best_feature_id,
-                               best_threshold,
-                               best_gini,
-                               label=np.argmax(np_utils.label_counts(y))
-
-        # return when gini_left and gini_right == 0.0
-
-        if depth < self.max_depth:
-            if np_utils.instance_count(best_left_X) > 1:
-                node.left, depth_left = self._grow_tree(best_left_X, best_left_y, depth+1)
-
-            if np_utils.instance_count(best_right_X) > 1:
-                node.right, depth_right = self._grow_tree(best_right_X, best_right_y, depth+1)
-
-        return node, max(depth_left, depth_right)
+        return best_split
 
     def _split(self, X, y, feature_id, threshold):
         """Split the data set X by evaluating feature_id over threshold.
@@ -121,31 +125,33 @@ class DecisionTreeClassifier(object):
         Returns:
             Two splitted data sets as numpy arrays.
         """
+        class Split(object):
+            """Class to store splits."""
+            def __init__(self,
+                         left_X=None,
+                         left_y=None,
+                         right_X=None,
+                         right_y=None,
+                         feature_id=0,
+                         threshold=0.):
+                self.left_X = left_X
+                self.left_y = left_y
+                self.right_X = right_X
+                self.right_y = right_y
+                self.feature_id = feature_id
+                self.threshold = threshold
+
+        split = Split(feature_id=feature_id, threshold=threshold)
+
         mask = X[:, feature_id] <= threshold
 
-        left_X = X[mask]
-        left_y = y[mask]
+        split.left_X = X[mask]
+        split.left_y = y[mask]
 
-        right_X = X[np.logical_not(mask)]
-        right_y = y[np.logical_not(mask)]
+        split.right_X = X[np.logical_not(mask)]
+        split.right_y = y[np.logical_not(mask)]
 
-        return left_X, left_y, right_X, right_y
-
-    def _gini(self, X, y):
-        """Calculate gini impurity of given data set X.
-
-        Args:
-            X: Training data set.
-            y: Label set
-
-        Returns:
-            Gini impurity as float.
-        """
-        m = np_utils.instance_count(X)
-
-        label_counts = np_utils.label_counts(y)
-
-        return 1 - sum([(n / m)**2 for n in label_counts])
+        return split
 
     def _evaluate(self, x):
         """Evaluate feature vector x against the decision tree.

@@ -4,6 +4,8 @@ import math
 
 import numpy as np
 
+from . import numpy_utils as np_utils
+
 def mse(y, y_predicted):
     """Calculates MSE of given target and predicted values.
 
@@ -60,3 +62,19 @@ def log_loss(y, y_predicted):
 
     return (-1./m) * sum(y.T.dot(np.log(y_predicted))
                          + (1-y).T.dot(np.log(1-y_predicted)))
+
+def gini(X, y):
+    """Calculate gini impurity of given data set X.
+
+    Args:
+        X: Training data set.
+        y: Label set
+
+    Returns:
+        Gini impurity as float.
+    """
+    m = np_utils.instance_count(X)
+
+    label_counts = np_utils.label_counts(y)
+
+    return 1 - sum([(n / m)**2 for n in label_counts])
