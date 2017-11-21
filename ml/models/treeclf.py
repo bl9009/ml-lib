@@ -57,27 +57,35 @@ class DecisionTreeClassifier(object):
 
             The depth of the returned node.
         """
-        gini = metrics.gini(X, y)
-
-        if gini != 0.:
-            split = self._find_best_split(X, y)
-
-        node = BinaryTree.Node(split.feature_id,
-                               split.threshold,
-                               label=np.argmax(np_utils.label_counts(y)))
-
+        node_left, node_right = None, None
         depth_left, depth_right = 0, 0
 
+        gini = metrics.gini(X, y)
+
+        node = None
+
         if gini != 0. and depth < self.max_depth:
+            split = self._find_best_split(X, y)
+
             if np_utils.instance_count(split.left_X) > 1:
-                node.left, depth_left = self._grow_tree(split.left_X,
+                node_left, depth_left = self._grow_tree(split.left_X,
                                                         split.left_y,
                                                         depth+1)
 
             if np_utils.instance_count(split.right_X) > 1:
-                node.right, depth_right = self._grow_tree(split.right_X,
-                                                          split.right_y,
-                                                          depth+1)
+                node_right, depth_right = self._grow_tree(split.right_X,
+                                                            split.right_y,
+                                                            depth+1)
+
+            node = BinaryTree.Node(split.feature_id,
+                                   split.threshold,
+                                   label=np.argmax(np_utils.label_counts(y)))
+
+            node.left = node_left
+            node.right = node_right
+
+        else:
+            node = BinaryTree.Node(label=np.argmax(np_utils.label_counts(y)))
 
         return node, max(depth_left, depth_right, depth)
 
