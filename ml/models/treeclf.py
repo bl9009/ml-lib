@@ -68,22 +68,23 @@ class DecisionTreeClassifier(object):
         best_right_X = None
         best_right_y = None
 
-        for j, in enumerate(X.T):
+        for feature, in enumerate(X.T):
             for instance in X:
                 split = self._split(X,
                                     y,
-                                    feature_id=j,
-                                    threshold=instance[j])
+                                    feature_id=feature,
+                                    threshold=instance[feature])
 
                 left_X, left_y, right_X, right_y = split
 
                 gini_left = self._gini(left_X, left_y)
                 gini_right = self._gini(right_X, right_y)
 
+                # maybe better: (gini_left + gini_right) <= best_gini ???
                 if gini_left <= best_gini and gini_right <= best_gini:
-                    best_feature_id = j
+                    best_feature_id = feature
 
-                    best_threshold = instance[j]
+                    best_threshold = instance[feature]
 
                     best_gini = max(gini_left, gini_right)
 
@@ -95,7 +96,10 @@ class DecisionTreeClassifier(object):
 
         node = BinaryTree.Node(best_feature_id,
                                best_threshold,
-                               best_gini)
+                               best_gini,
+                               label=np.argmax(np_utils.label_counts(y))
+
+        # return when gini_left and gini_right == 0.0
 
         if depth < self.max_depth:
             if np_utils.instance_count(best_left_X) > 1:
