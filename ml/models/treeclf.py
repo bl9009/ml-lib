@@ -80,7 +80,7 @@ class DecisionTreeClassifier(object):
                 gini_left = self._gini(left_X, left_y)
                 gini_right = self._gini(right_X, right_y)
 
-                if gini_left > best_gini or gini_right > best_gini:
+                if gini_left <= best_gini and gini_right <= best_gini:
                     best_feature_id = j
 
                     best_threshold = instance[j]
