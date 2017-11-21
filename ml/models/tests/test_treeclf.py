@@ -4,15 +4,14 @@ import numpy as np
 
 from ml.models.treeclf import DecisionTreeClassifier
 from ml.models.treeclf import BinaryTree
+from ml.utils import metrics
 
 class TestDecisionTreeClassifier(unittest.TestCase):
 
     def test_gini(self):
         X, y, gini = data_set()
 
-        clf = DecisionTreeClassifier()
-
-        self.assertEqual(clf._gini(X, y), gini)
+        self.assertEqual(metrics.gini(X, y), gini)
 
     def test_split(self):
         X, y, _ = data_set()
