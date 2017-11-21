@@ -17,19 +17,27 @@ class TestDecisionTreeClassifier(unittest.TestCase):
     def test_split(self):
         X, y, _ = data_set()
 
-        test_left_X, test_left_y, test_right_X, test_right_y = data_set_splitted_1_5()
+        test_split = data_set_splitted_1_5()
+
+        test_left_X, test_left_y, test_right_X, test_right_y = test_split
 
         clf = DecisionTreeClassifier()
 
-        left_X, left_y, right_X, right_y = clf._split(X, y, feature_id=1, threshold=5)
+        split = clf._split(X, y, feature_id=1, threshold=5)
 
-        self.assertArraysEqual(left_X, test_left_X)
-        self.assertArraysEqual(left_y, test_left_y)
-        self.assertArraysEqual(right_X, test_right_X)
-        self.assertArraysEqual(right_y, test_right_y)
+        self.assertArraysEqual(split.left_X, test_left_X)
+        self.assertArraysEqual(split.left_y, test_left_y)
+        self.assertArraysEqual(split.right_X, test_right_X)
+        self.assertArraysEqual(split.right_y, test_right_y)
 
     def test_grow_tree(self):
-        pass
+        X = np.array([[12, 34, 62],
+                      [3, 86, 28],
+                      [42, 18, 81],
+                      [23, 52, 21],
+                      [14, 16, 42]])
+
+        y = np.array([1, 1, 0, 0, 1])
 
     def assertArraysEqual(self, X1, X2):
         # workaround to assert numpy arrays
