@@ -133,7 +133,7 @@ def data_set_splitted_1_18():
 def data_set_best_split():
     left_X = np.array([[12, 34, 62],
                        [3, 86, 28],
-                       [14, 16,42]])
+                       [14, 16, 42]])
 
     right_X = np.array([[42, 18, 81],
                         [23, 52, 21]])
