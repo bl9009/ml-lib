@@ -74,8 +74,8 @@ class DecisionTreeClassifier(object):
 
             if np_utils.instance_count(split.right_X) > 1:
                 node_right, depth_right = self._grow_tree(split.right_X,
-                                                            split.right_y,
-                                                            depth+1)
+                                                          split.right_y,
+                                                          depth+1)
 
             node = BinaryTree.Node(split.feature_id,
                                    split.threshold,
@@ -101,9 +101,11 @@ class DecisionTreeClassifier(object):
             A tuple of arrays representing the splitted subsets of features and
             labels.
         """
-        best_gini = 0.
+        best_J = 0.
 
         best_split = None
+
+        m = np_utils.instance_count(X)
 
         for feature, _ in enumerate(X.T):
             for instance in X:
@@ -112,11 +114,16 @@ class DecisionTreeClassifier(object):
                                     feature_id=feature,
                                     threshold=instance[feature])
 
+                m_left = np_utils.instance_count(split.left_X)
+                m_right = np_utils.instance_count(split.right_X)
+
                 gini_left = metrics.gini(split.left_X, split.left_y)
                 gini_right = metrics.gini(split.right_X, split.right_y)
 
-                if (gini_left + gini_right) <= best_gini:
-                    best_gini = gini_left + gini_right
+                J = (m_left / m) * gini_left + (m_right / m) * gini_right
+
+                if J <= best_J:
+                    best_J = J
 
                     best_split = split
 
@@ -207,7 +214,6 @@ class BinaryTree(object):
 
         def set_left(self, node):
             """Set the left child node."""
-
             # decision trees grow top down, so _no_ nodes
             # will be added in between
             self.left = node
