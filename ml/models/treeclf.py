@@ -187,8 +187,8 @@ class BinaryTree(object):
         """Node class for binary trees."""
 
         def __init__(self,
-                     left=None
-                     right=None
+                     left=None,
+                     right=None,
                      feature_id=0,
                      threshold=0.,
                      gini=0.,
