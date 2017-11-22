@@ -75,12 +75,11 @@ class DecisionTreeClassifier(object):
                                                       split.right_y,
                                                       depth+1)
 
-            node = BinaryTree.Node(split.feature_id,
+            node = BinaryTree.Node(node_left,
+                                   node_right,
+                                   split.feature_id,
                                    split.threshold,
                                    label=np.argmax(np_utils.label_counts(y)))
-
-            node.left = node_left
-            node.right = node_right
 
         else:
             node = BinaryTree.Node(label=np.argmax(np_utils.label_counts(y)))
@@ -187,7 +186,15 @@ class BinaryTree(object):
     class Node(object):
         """Node class for binary trees."""
 
-        def __init__(self, feature_id=0, threshold=0., gini=0., samples=0., value=None, label=""):
+        def __init__(self,
+                     left=None
+                     right=None
+                     feature_id=0,
+                     threshold=0.,
+                     gini=0.,
+                     samples=0.,
+                     value=None,
+                     label=""):
             """Initialize binary tree node.
 
             Args:
@@ -200,9 +207,8 @@ class BinaryTree(object):
                 value: List of counts of each label classified by this node.
                 label: Most probable label classified by this node.
             """
-            self.left = None
-            self.right = None
-
+            self.left = left
+            self.right = right
             self.feature_id = feature_id
             self.threshold = threshold
             self.gini = gini
