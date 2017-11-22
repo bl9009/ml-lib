@@ -67,15 +67,13 @@ class DecisionTreeClassifier(object):
         if gini != 0. and depth < self.max_depth:
             split = self._find_best_split(X, y)
 
-            if np_utils.instance_count(split.left_X) > 1:
-                node_left, depth_left = self._grow_tree(split.left_X,
-                                                        split.left_y,
-                                                        depth+1)
+            node_left, depth_left = self._grow_tree(split.left_X,
+                                                    split.left_y,
+                                                    depth+1)
 
-            if np_utils.instance_count(split.right_X) > 1:
-                node_right, depth_right = self._grow_tree(split.right_X,
-                                                          split.right_y,
-                                                          depth+1)
+            node_right, depth_right = self._grow_tree(split.right_X,
+                                                      split.right_y,
+                                                      depth+1)
 
             node = BinaryTree.Node(split.feature_id,
                                    split.threshold,
