@@ -9,12 +9,13 @@ class DecisionTreeClassifier(object):
     """Decision Tree classification model that is trained with the CART
     algorithm."""
 
-    def __init__(self, max_depth=5):
+    def __init__(self, max_depth=5, min_impurity=0.):
         """Initialize Decision Tree model."""
         self.tree = BinaryTree()
         self.depth = 0
 
         self.max_depth = max_depth
+        self.min_impurity = min_impurity
 
     def fit(self, X, y):
         """Fits the Decision Tree model.
@@ -64,7 +65,9 @@ class DecisionTreeClassifier(object):
 
         node = None
 
-        if gini != 0. and depth < self.max_depth:
+        if (gini >= self.min_impurity and
+            depth < self.max_depth):
+
             split = self._find_best_split(X, y)
 
             node_left, depth_left = self._grow_tree(split.left_X,
