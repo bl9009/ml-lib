@@ -19,6 +19,7 @@ class DecisionTreeClassifier(object):
 
         self.max_depth = max_depth
         self.min_impurity = min_impurity
+        self.min_samples = min_samples
 
     def fit(self, X, y):
         """Fits the Decision Tree model.
@@ -69,8 +70,8 @@ class DecisionTreeClassifier(object):
         node = None
 
         if (gini >= self.min_impurity and
-            depth < self.max_depth and
-            np_utils.instance_count(X) >= self.min_samples):
+                depth < self.max_depth and
+                np_utils.instance_count(X) >= self.min_samples):
 
             split = self._find_best_split(X, y)
 
