@@ -1,3 +1,5 @@
+"""Tests for the treeclf module."""
+
 import unittest
 
 import numpy as np
@@ -7,13 +9,16 @@ from ml.models.treeclf import BinaryTree
 from ml.utils import metrics
 
 class TestDecisionTreeClassifier(unittest.TestCase):
+    """Tests for DecisionTreeClassifier."""
 
     def test_gini(self):
+        """Test gini computation."""
         X, y, gini = data_set()
 
         self.assertEqual(metrics.gini(X, y), gini)
 
     def test_split(self):
+        """Test split of data set."""
         X, y, _ = data_set()
 
         test_split = data_set_splitted_1_18()
@@ -30,6 +35,7 @@ class TestDecisionTreeClassifier(unittest.TestCase):
         self.assertArraysEqual(split.right_y, test_right_y)
 
     def test_best_split(self):
+        """Test finding the best split of a data set."""
         X, y, _ = data_set()
 
         test_split = data_set_best_split()
@@ -46,16 +52,19 @@ class TestDecisionTreeClassifier(unittest.TestCase):
         self.assertArraysEqual(split.right_y, test_right_y)
 
     def test_grow_tree(self):
+        """Test growing the decision tree."""
         pass
 
     def assertArraysEqual(self, X1, X2):
-        # workaround to assert numpy arrays
+        """Workaround to assert numpy arrays."""
         self.assertTrue((X1 == X2).all())
 
 
 class TestBinaryTree(unittest.TestCase):
+    """Test for the BinaryTree."""
 
     def test_eq(self):
+        """Test equality operator."""
         node1 = BinaryTree.Node()
         node2 = BinaryTree.Node()
         node3 = BinaryTree.Node(feature_id=1)
@@ -64,6 +73,7 @@ class TestBinaryTree(unittest.TestCase):
         self.assertTrue(node1 != node3)
 
     def test_add_node(self):
+        """Test adding a left and right node to a node."""
         tree = BinaryTree()
 
         left_node = BinaryTree.Node(feature_id=1)
@@ -76,6 +86,7 @@ class TestBinaryTree(unittest.TestCase):
         self.assertEqual(tree.root.right, right_node)
 
     def test_is_leaf(self):
+        """Test if node is a leaf."""
         tree = BinaryTree()
 
         node1 = BinaryTree.Node()
@@ -89,6 +100,7 @@ class TestBinaryTree(unittest.TestCase):
 
 
 def data_set():
+    """Return sample data set and its gini impurity."""
     X = np.array([[12, 34, 62],
                   [3, 86, 28],
                   [42, 18, 81],
@@ -97,26 +109,12 @@ def data_set():
 
     y = np.array([1, 1, 0, 0, 1])
 
-    #X = np.array([[1, 2, 3],
-    #              [4, 5, 6],
-    #              [7, 8, 9],
-    #              [3, 5, 7],
-    #              [8, 1, 2]])
-
-    #y = np.array([[0],
-    #             [1],
-    #             [1],
-    #             [0],
-    #             [1]])
-
-    #y = np.array([0, 1, 1, 0, 1])
-
     gini = 0.48
 
     return X, y, gini
 
 def data_set_splitted_1_18():
-    # data set splitted at feature 1 and threshold 18
+    """Return a data set splitted at feature 1 and threshold 18."""
     left_X = np.array([[42, 18, 81],
                        [14, 16, 42]])
 
@@ -131,6 +129,7 @@ def data_set_splitted_1_18():
     return left_X, left_y, right_X, right_y
 
 def data_set_best_split():
+    """Return best split of data set."""
     left_X = np.array([[12, 34, 62],
                        [3, 86, 28],
                        [14, 16, 42]])
@@ -145,6 +144,7 @@ def data_set_best_split():
     return left_X, left_y, right_X, right_y
 
 def generate_data(m, n, seed):
+    """Generate random data set."""
     np.random.seed(seed)
 
     X = np.random.randint(0, 100, size=(m, n))
