@@ -52,6 +52,17 @@ class CrossValidation(object):
         val_ids = np.arange(m_val)
         numpy.random.shuffle(val_ids)
 
+        mask = np.ones(len(X), dtype=bool)
+        mask[val_ids] = False
+
+        val_X = X[val_ids, :]
+        val_y = y[val_ids, :]
+
+        train_X = X[mask, :]
+        train_y = y[mask, :]
+
+        return train_X, train_y, val_X, val_y
+
 def accuracy(predicted_y, validation_y):
     m = np_utils.instance_count(validation_y)
 

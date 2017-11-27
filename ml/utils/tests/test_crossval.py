@@ -11,7 +11,11 @@ class TestCrossValidation(unittest.TestCase):
         pass
 
     def test_generate_split(self):
-        pass
+        cv = CrossValidation()
+
+        split = cv._generate_split(X, y)
+
+        test_train_X, test_train_y, test_val_X, test_val_y = split
 
     def test_accuracy(self):
         pred_y, val_y = y_data()
