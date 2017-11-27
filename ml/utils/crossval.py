@@ -53,22 +53,46 @@ class CrossValidation(object):
         numpy.random.shuffle(val_ids)
 
 def accuracy(predicted_y, validation_y):
-    pass
+    m = np_utils.instance_count(validation_y)
+
+    acc = (predicted_y == validation_y).sum() / m
+
+    return acc
 
 def true_positives(predicted_y, validation_y):
-    pass
+    val_pos = np.where(validation_y == 1)
+    pred_pos = np.where(predicted_y == 1)
+
+    return np.in1d(pred_pos, val_pos).sum()
 
 def true_negatives(predicted_y, validation_y):
-    pass
+    val_neg = np.where(validation_y == 0)
+    pred_neg = np.where(predicted_y == 0)
+
+    return np.in1d(pred_neg, val_neg).sum()
 
 def false_positives(predicted_y, validation_y):
-    pass
+    val_neg = np.where(validation_y == 0)
+    pred_pos = np.where(predicted_y == 1)
+
+    return np.in1d(pred_pos, val_neg).sum()
 
 def false_negatives(predicted_y, validation_y):
-    pass
+    val_pos = np.where(validation_y == 1)
+    pred_neg = np.where(predicted_y == 0)
+
+    return np.in1d(pred_neg, val_pos).sum()
 
 def precision(predicted_y, validation_y):
-    pass
+    # how many of predicted positives are actual positives? TPR
+    true_pos = true_positives(predicted_y, validation_y)
+    false_pos = false_positives(predicted_y, validation_y)
+
+    return true_pos / (true_pos + false_pos)
 
 def recall(predicted_y, validation_y):
-    pass
+    # how many of all actual positives have been predicted correctly?
+    true_pos = true_positives(predicted_y, validation_y)
+    false_neg = false_negatives(predicted_y, validation_y)
+
+    return true_pos / (true_pos + false_neg)

@@ -16,29 +16,69 @@ class TestCrossValidation(unittest.TestCase):
     def test_accuracy(self):
         pred_y, val_y = y_data()
 
-        recall = crossval.accuracy(pred_y, val_y)
+        test_acc = 0.75
+
+        acc = crossval.accuracy(pred_y, val_y)
+
+        self.assertEqual(acc, test_acc)
 
     def test_true_positives(self):
-        pass
+        pred_y, val_y = y_data()
 
-    def test_true_negatives(self):
-        pass
+        test_tp = 5
+
+        tp = crossval.true_positives(pred_y, val_y)
+
+        self.assertEqual(tp, test_tp)
+
+    def test_true_negatives(self):        
+        pred_y, val_y = y_data()
+
+        test_tn = 4
+
+        tn = crossval.true_negatives(pred_y, val_y)
+
+        self.assertEqual(tn, test_tn)
 
     def test_false_positives(self):
-        pass
+        pred_y, val_y = y_data()
+
+        test_fp = 1
+
+        fp = crossval.false_positives(pred_y, val_y)
+
+        self.assertEqual(fp, test_fp)
 
     def test_false_negatives(self):
-        pass
+        pred_y, val_y = y_data()
+
+        test_fn = 2
+
+        fn = crossval.false_negatives(pred_y, val_y)
+
+        self.assertEqual(fn, test_fn)
 
     def test_precision(self):
-        pass
+        pred_y, val_y = y_data()
+
+        test_prec = 5 / 6
+
+        prec = crossval.precision(pred_y, val_y)
+
+        self.assertEqual(prec, test_prec)
 
     def test_recall(self):
-        pass
+        pred_y, val_y = y_data()
+
+        test_rec = 5 / 7
+
+        rec = crossval.recall(pred_y, val_y)
+
+        self.assertEqual(rec, test_rec)
 
 
 def y_data():
-    predicted = np.array([1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0])
+    predicted  = np.array([1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0])
     validation = np.array([1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0])
 
     return predicted, validation
