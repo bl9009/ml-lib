@@ -6,11 +6,15 @@ from . import numpy_utils as np_utils
 
 class CrossValidation(object):
 
-    def __init__(self, classifier=None, val_ratio=0.2, folds=1, seed=42):
+    def __init__(self,
+                 classifier=None,
+                 val_ratio=0.2,
+                 folds=1,
+                 seed=42):
         self.classifier = classifier
-        self.val_ratio=0.2
-        self.folds=1
-        self.seed=42
+        self.val_ratio = val_ratio
+        self.folds = folds
+        self.seed = seed
 
         self.accuracy = list()
         self.tp = list()
