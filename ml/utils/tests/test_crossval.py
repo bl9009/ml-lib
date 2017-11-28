@@ -11,11 +11,19 @@ class TestCrossValidation(unittest.TestCase):
         pass
 
     def test_generate_split(self):
-        cv = CrossValidation()
+        cv = CrossValidation(val_ratio=0.3)
+
+        X = np.random.randint(0, 100, size=(100, 5))
+        y = np.random.randint(0, 1, size=(100, 1))
 
         split = cv._generate_split(X, y)
 
         test_train_X, test_train_y, test_val_X, test_val_y = split
+
+        self.assertEqual(len(test_train_X), 70)
+        self.assertEqual(len(test_train_y), 70)
+        self.assertEqual(len(test_val_X), 30)
+        self.assertEqual(len(test_val_y), 30)
 
     def test_accuracy(self):
         pred_y, val_y = y_data()
@@ -35,7 +43,7 @@ class TestCrossValidation(unittest.TestCase):
 
         self.assertEqual(tp, test_tp)
 
-    def test_true_negatives(self):        
+    def test_true_negatives(self):
         pred_y, val_y = y_data()
 
         test_tn = 4

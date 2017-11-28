@@ -50,7 +50,7 @@ class CrossValidation(object):
         np.random.seed(self.seed)
 
         val_ids = np.arange(m_val)
-        numpy.random.shuffle(val_ids)
+        np.random.shuffle(val_ids)
 
         mask = np.ones(len(X), dtype=bool)
         mask[val_ids] = False
