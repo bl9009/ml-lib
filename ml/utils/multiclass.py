@@ -4,6 +4,7 @@ import copy
 
 import numpy as np
 
+POSITIVE_CLASS = 1
 NEGATIVE_CLASS = -1
 
 class OneVsAll(object):
@@ -46,7 +47,7 @@ class OneVsAll(object):
         for c, clf in self.trained_clf.items():
             results[c] = clf.predict(X)
 
-        return evaluate(results)
+        return evaluate(results, len(X))
 
 
 def identify_classes(y):
@@ -59,15 +60,17 @@ def align_labels(y, class_):
     """
     y_aligned = np.copy(y)
 
+    y_aligned[y_aligned == class_] = POSITIVE_CLASS
     y_aligned[y_aligned != class_] = NEGATIVE_CLASS
 
     return y_aligned
 
-def evaluate(results):
+def evaluate(results, length):
     """Evaluates dict of predicted results and returns an array with
     the final result.
 
     Args:
         results: A dict with predicted results per class.
+        length: The length of the result set.
     """
-    pass
+    evaluated = np.zeros(length)
