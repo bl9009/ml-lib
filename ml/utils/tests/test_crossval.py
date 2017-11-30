@@ -1,3 +1,5 @@
+"""Tests for the crossval module."""
+
 import unittest
 
 import numpy as np
@@ -6,18 +8,30 @@ from ml.utils import crossval
 from ml.utils.crossval import CrossValidation
 
 class TestCrossValidation(unittest.TestCase):
+    """Tests for CrossValidation."""
 
     def test_score(self):
+        """Test score computation."""
         pass
 
     def test_generate_split(self):
-        cv = CrossValidation()
+        """Test splitting of data."""
+        cv = CrossValidation(val_ratio=0.3)
+
+        X = np.random.randint(0, 100, size=(100, 5))
+        y = np.random.randint(0, 1, size=(100, 1))
 
         split = cv._generate_split(X, y)
 
         test_train_X, test_train_y, test_val_X, test_val_y = split
 
+        self.assertEqual(len(test_train_X), 70)
+        self.assertEqual(len(test_train_y), 70)
+        self.assertEqual(len(test_val_X), 30)
+        self.assertEqual(len(test_val_y), 30)
+
     def test_accuracy(self):
+        """Test accuracy computation."""
         pred_y, val_y = y_data()
 
         test_acc = 0.75
@@ -27,6 +41,7 @@ class TestCrossValidation(unittest.TestCase):
         self.assertEqual(acc, test_acc)
 
     def test_true_positives(self):
+        """Test retrieval of true positives."""
         pred_y, val_y = y_data()
 
         test_tp = 5
@@ -35,7 +50,8 @@ class TestCrossValidation(unittest.TestCase):
 
         self.assertEqual(tp, test_tp)
 
-    def test_true_negatives(self):        
+    def test_true_negatives(self):
+        """Test retrieval of true negatives."""
         pred_y, val_y = y_data()
 
         test_tn = 4
@@ -45,6 +61,7 @@ class TestCrossValidation(unittest.TestCase):
         self.assertEqual(tn, test_tn)
 
     def test_false_positives(self):
+        """Test retrieval of false positives."""
         pred_y, val_y = y_data()
 
         test_fp = 1
@@ -54,6 +71,7 @@ class TestCrossValidation(unittest.TestCase):
         self.assertEqual(fp, test_fp)
 
     def test_false_negatives(self):
+        """Test retrieval of false negatives."""
         pred_y, val_y = y_data()
 
         test_fn = 2
@@ -63,6 +81,7 @@ class TestCrossValidation(unittest.TestCase):
         self.assertEqual(fn, test_fn)
 
     def test_precision(self):
+        """Test precision computation."""
         pred_y, val_y = y_data()
 
         test_prec = 5 / 6
@@ -72,6 +91,7 @@ class TestCrossValidation(unittest.TestCase):
         self.assertEqual(prec, test_prec)
 
     def test_recall(self):
+        """Test recall computation."""
         pred_y, val_y = y_data()
 
         test_rec = 5 / 7
@@ -82,7 +102,8 @@ class TestCrossValidation(unittest.TestCase):
 
 
 def y_data():
-    predicted  = np.array([1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0])
+    """Return some test labels."""
+    predicted = np.array([1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0])
     validation = np.array([1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0])
 
     return predicted, validation
