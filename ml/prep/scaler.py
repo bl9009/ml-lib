@@ -11,8 +11,10 @@ def normalize(X):
     Returns:
         Min-max-scaled feature set.
     """
+    min = X.min(axis=0)
+    max = X.max(axis=0)
 
-    return (X - X.min()) / (X.max() - X.min())
+    return (X - min) / (max - min)
 
 def standardize(X):
     """Standardize feature set X.
