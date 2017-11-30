@@ -25,7 +25,7 @@ def standardize(X):
     Returns:
         Scaled feature set.
     """
-    mean = np.mean(X, axis=0)
-    variance = np.var(X, axis=0)
+    mean = X.mean(axis=0)
+    variance = X.var(axis=0)
 
     return (X - mean) / variance
