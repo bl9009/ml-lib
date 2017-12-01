@@ -1,7 +1,5 @@
 """Functions for feature scaling."""
 
-import numpy as np
-
 def normalize(X):
     """Normalize features X (min-max-scaling).
 
@@ -11,10 +9,10 @@ def normalize(X):
     Returns:
         Min-max-scaled feature set.
     """
-    min = X.min(axis=0)
-    max = X.max(axis=0)
+    min_ = X.min(axis=0)
+    max_ = X.max(axis=0)
 
-    return (X - min) / (max - min)
+    return (X - min_) / (max_ - min_)
 
 def standardize(X):
     """Standardize feature set X.
