@@ -4,6 +4,8 @@ import copy
 
 import numpy as np
 
+from ..utils import numpy_utils as np_utils
+
 POSITIVE_CLASS = 1
 NEGATIVE_CLASS = -1
 
@@ -19,6 +21,7 @@ class OneVsAll(object):
         self.clf = clf
 
         self.trained_clf = dict()
+        self.classes = None
 
     def fit(self, X, y):
         """Train the multiclass classifier for each class in y.
@@ -27,9 +30,9 @@ class OneVsAll(object):
             X: Training data set.
             y: Label set.
         """
-        classes = identify_classes(y)
+        self.classes = identify_classes(y)
 
-        for c in classes:
+        for c in self.classes:
             y_aligned = align_labels(y, class_=c)
 
             tmp_clf = copy.deepcopy(self.clf)
@@ -42,12 +45,13 @@ class OneVsAll(object):
         Args:
             X: Feature set to predict on.
         """
-        results = dict()
+        results = np.zeros(np_utils.instance_count(X),
+                           len(self.trained_clf))
 
         for c, clf in self.trained_clf.items():
-            results[c] = clf.predict(X)
+            results[:, c] = clf.predict(X)
 
-        return evaluate(results, len(X))
+        return evaluate(results, self.trained_clf.keys())
 
 
 def identify_classes(y):
@@ -65,12 +69,12 @@ def align_labels(y, class_):
 
     return y_aligned
 
-def evaluate(results, length):
+def evaluate(results, classes):
     """Evaluates dict of predicted results and returns an array with
     the final result.
 
     Args:
         results: A dict with predicted results per class.
-        length: The length of the result set.
+        classes: Array of classes.
     """
-    evaluated = np.zeros(length)
+    return classes[np.where(results[:, :] == 1)[1]]
