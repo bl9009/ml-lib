@@ -55,20 +55,21 @@ class FeedForwardANN(abc.ABC):
 
         np.random.seed(self.seed)
 
-        self.network = [np.random.randn(i, j)
+        self.network = [np.random.randn(i + 1, j)
                         for i, j
                         in zip(nodes[:-1], nodes[1:])]
 
     def _feed_forward(self, X):
         """Feed forward network with dataset X."""
-        out = X.T
+        out = X
 
-        for layer in self.network:
-            z = layer.T.dot(out)
+        for i, layer in enumerate(self.network):
+            z = layer.T.dot(tools.insert_intercept(out).T)
 
-            out = self.activation(z)
+            out = self.activation(z).T
 
         return out
+
 
 class MLP(FeedForwardANN):
     """Feed-forward Multi-Layer Perceptron model."""

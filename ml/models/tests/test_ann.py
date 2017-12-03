@@ -24,9 +24,9 @@ class TestANN(unittest.TestCase):
         """Test network construction."""
 
         test_network = [
-            np.random.randn(10, 4),
-            np.random.randn(4, 6),
-            np.random.randn(6, 3)]
+            np.random.randn(11, 4),
+            np.random.randn(5, 6),
+            np.random.randn(7, 3)]
 
         ann = self.MockANN(hidden_nodes=(4, 6))
 
@@ -55,4 +55,4 @@ class TestANN(unittest.TestCase):
 
         out = ann.feed_forward(X)
 
-        self.assertEqual(out.T.shape, (130, 3))
+        self.assertEqual(out.shape, (130, 3))
