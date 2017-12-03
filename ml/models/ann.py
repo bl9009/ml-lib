@@ -4,19 +4,22 @@ import abc
 
 import numpy as np
 
+from ..utils import numpy_utils as np_utils
+
 class ANN(abc.ABC):
     """Abstract base class for Artificial Neural Network models."""
 
-    def __init__(self, hidden_layout=tuple(), activation=None):
+    def __init__(self, hidden_nodes=tuple(), activation=None):
         """Initialize the Neural Netowrk.
 
         Args:
-            hidden_layout: Tuple representing the layout of hidden layers.
+            hidden_nodes: Tuple with number of nodes for each hidden layer.
             activation: Reference to activation function.
         """
-        self.hidden_layout = hidden_layout
+        self.hidden_nodes = hidden_nodes
         self.activation = activation
 
+        self.network = None
         self.theta = None
 
     def fit(self, X, y):
@@ -39,6 +42,16 @@ class ANN(abc.ABC):
         """
         pass
 
+    def _build_network(self, n, k):
+        """Builds the network.
+
+        Args:
+            n: number of features (input nodes).
+            k: number of classes (output nodes).
+        """
+        nodes = (n,) + self.hidden_nodes + (k,)
+
+        self.network = [np.random.randn(i, j) for i, j in zip(nodes[:-1], nodes[1:])]
 
 class MLP(ANN):
     """Feed-forward Multi-layer Perceptron model."""
@@ -50,7 +63,10 @@ class MLP(ANN):
             X: Training data set.
             y: Labels.
         """
-        pass
+        n = np_utils.feature_count(X)
+        k = np_utils.label_counts(y)
+
+        self._build_network(n, k)
 
     def predict(self, X):
         """Performs predictions based on fitted model.
