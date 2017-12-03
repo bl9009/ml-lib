@@ -4,7 +4,7 @@ import math
 
 import numpy as np
 
-from . import numpy_utils as np_utils
+from . import tools
 
 def mse(y, y_predicted):
     """Calculates MSE of given target and predicted values.
@@ -73,8 +73,8 @@ def gini(X, y):
     Returns:
         Gini impurity as float.
     """
-    m = np_utils.instance_count(X)
+    m = tools.instance_count(X)
 
-    label_counts = np_utils.label_counts(y)
+    label_counts = tools.label_counts(y)
 
     return 1 - sum([(n / m)**2 for n in label_counts])

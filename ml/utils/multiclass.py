@@ -4,7 +4,7 @@ import copy
 
 import numpy as np
 
-from ..utils import numpy_utils as np_utils
+from ..utils import tools
 
 POSITIVE_CLASS = 1
 NEGATIVE_CLASS = -1
@@ -45,7 +45,7 @@ class OneVsAll(object):
         Args:
             X: Feature set to predict on.
         """
-        results = np.zeros(np_utils.instance_count(X),
+        results = np.zeros(tools.instance_count(X),
                            len(self.trained_clf))
 
         for c, clf in self.trained_clf.items():

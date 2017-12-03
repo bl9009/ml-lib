@@ -4,7 +4,7 @@ import abc
 
 import numpy as np
 
-from ..utils import numpy_utils as np_utils
+from ..utils import tools
 
 class SgdRegressor(abc.ABC):
     """Abstract super class for SGD regression models.
@@ -47,11 +47,11 @@ class SgdRegressor(abc.ABC):
             X: Training data set.
             y: Labels.
         """
-        X = np_utils.insert_intercept(X)
+        X = tools.insert_intercept(X)
 
-        self.theta = np.ones((1, np_utils.feature_count(X)))
+        self.theta = np.ones((1, tools.feature_count(X)))
 
-        m = np_utils.instance_count(X)
+        m = tools.instance_count(X)
 
         gradient_vector = self.__make_loss_gradient_vector(X, y)
 
@@ -75,7 +75,7 @@ class SgdRegressor(abc.ABC):
         Returns:
             A numpy array containing the predicted values.
         """
-        X = np_utils.insert_intercept(X)
+        X = tools.insert_intercept(X)
 
         return self.h(X)
 
@@ -121,7 +121,7 @@ class SgdRegressor(abc.ABC):
             Returns:
                 Vector of gradients as numpy array.
             """
-            m = np_utils.instance_count(X)
+            m = tools.instance_count(X)
 
             index = np.random.randint(m)
 
@@ -143,7 +143,7 @@ def lasso_vector(theta):
     """
     return sign(theta)
 
-@np_utils.vectorize
+@tools.vectorize
 def sign(theta):
     """Calculates subgradient derivative for LASSO penalty."""
     if theta > 0:

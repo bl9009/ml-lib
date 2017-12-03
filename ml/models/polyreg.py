@@ -7,7 +7,7 @@ from math import factorial as fac
 
 import numpy as np
 
-from ..utils import numpy_utils as np_utils
+from ..utils import tools
 
 from .linearreg import LinearRegressor, LinearSgdRegressor
 
@@ -101,8 +101,8 @@ def polynomial_features(X, degree):
     Returns:
         A numpy array containing the polynomial feature set.
     """
-    m = np_utils.instance_count(X)
-    n = np_utils.feature_count(X)
+    m = tools.instance_count(X)
+    n = tools.feature_count(X)
 
     n_poly, combinations = __generate_combinations(n, degree)
 

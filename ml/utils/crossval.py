@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from . import numpy_utils as np_utils
+from . import tools
 
 class CrossValidation(object):
     """This class allows cross validation of machine learning models."""
@@ -70,7 +70,7 @@ class CrossValidation(object):
             X: Complete training data set.
             y: Complete training label set.
         """
-        m = np_utils.instance_count(X)
+        m = tools.instance_count(X)
 
         m_val = int(round(m * self.val_ratio))
 
@@ -92,7 +92,7 @@ class CrossValidation(object):
 
 def accuracy(predicted_y, validation_y):
     """Computes the accuracy."""
-    m = np_utils.instance_count(validation_y)
+    m = tools.instance_count(validation_y)
 
     acc = (predicted_y == validation_y).sum() / m
 

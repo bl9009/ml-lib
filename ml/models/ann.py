@@ -4,7 +4,7 @@ import abc
 
 import numpy as np
 
-from ..utils import numpy_utils as np_utils
+from ..utils import tools
 
 class ANN(abc.ABC):
     """Abstract base class for Artificial Neural Network models."""
@@ -63,8 +63,8 @@ class MLP(ANN):
             X: Training data set.
             y: Labels.
         """
-        n = np_utils.feature_count(X)
-        k = np_utils.label_counts(y)
+        n = tools.feature_count(X)
+        k = tools.label_counts(y)
 
         self._build_network(n, k)
 

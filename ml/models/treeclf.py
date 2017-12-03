@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from ..utils import numpy_utils as np_utils
+from ..utils import tools
 from ..utils import metrics
 
 class DecisionTreeClassifier(object):
@@ -39,7 +39,7 @@ class DecisionTreeClassifier(object):
         Returns:
             A numpy array containing the predicted values.
         """
-        results = np.ndarray(np_utils.instance_count(X))
+        results = np.ndarray(tools.instance_count(X))
 
         for i, x_i in enumerate(X):
             label = self._evaluate(x_i)
@@ -71,7 +71,7 @@ class DecisionTreeClassifier(object):
 
         if (gini >= self.min_impurity and
                 depth < self.max_depth and
-                np_utils.instance_count(X) >= self.min_samples):
+                tools.instance_count(X) >= self.min_samples):
 
             split = self._find_best_split(X, y)
 
@@ -87,10 +87,10 @@ class DecisionTreeClassifier(object):
                                    node_right,
                                    split.feature_id,
                                    split.threshold,
-                                   label=np.argmax(np_utils.label_counts(y)))
+                                   label=np.argmax(tools.label_counts(y)))
 
         else:
-            node = BinaryTree.Node(label=np.argmax(np_utils.label_counts(y)))
+            node = BinaryTree.Node(label=np.argmax(tools.label_counts(y)))
 
         return node, max(depth_left, depth_right, depth)
 
@@ -110,7 +110,7 @@ class DecisionTreeClassifier(object):
 
         best_split = None
 
-        m = np_utils.instance_count(X)
+        m = tools.instance_count(X)
 
         for feature, _ in enumerate(X.T):
             for instance in X:
@@ -119,8 +119,8 @@ class DecisionTreeClassifier(object):
                                     feature_id=feature,
                                     threshold=instance[feature])
 
-                m_left = np_utils.instance_count(split.left_X)
-                m_right = np_utils.instance_count(split.right_X)
+                m_left = tools.instance_count(split.left_X)
+                m_right = tools.instance_count(split.right_X)
 
                 gini_left = metrics.gini(split.left_X, split.left_y)
                 gini_right = metrics.gini(split.right_X, split.right_y)

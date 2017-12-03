@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from ..utils import numpy_utils as np_utils
+from ..utils import tools
 from .sgdreg import SgdRegressor
 
 class LinearRegressor(object):
@@ -31,9 +31,9 @@ class LinearRegressor(object):
             X: Training data set.
             y: Labels.
         """
-        X = np_utils.insert_intercept(X)
+        X = tools.insert_intercept(X)
 
-        A = np.identity(np_utils.feature_count(X))
+        A = np.identity(tools.feature_count(X))
 
         self.theta = np.linalg.inv(X.T.dot(X) + self.alpha * A).dot(X.T.dot(y)).T
 
@@ -46,7 +46,7 @@ class LinearRegressor(object):
         Returns:
             A numpy array containing the predicted values.
         """
-        X = np_utils.insert_intercept(X)
+        X = tools.insert_intercept(X)
 
         return self.h(X)
 
