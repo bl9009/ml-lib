@@ -1,4 +1,4 @@
-"""Implementations of Artifical Neural Network models."""
+"""Implementations of feed-forward Artifical Neural Network models."""
 
 import abc
 
@@ -6,10 +6,12 @@ import numpy as np
 
 from ..utils import tools
 
-class ANN(abc.ABC):
-    """Abstract base class for Artificial Neural Network models."""
+class FeedForwardANN(abc.ABC):
+    """Abstract base class for forwared-fed
+    Artificial Neural Network models.
+    """
 
-    def __init__(self, hidden_nodes=tuple(), activation=None):
+    def __init__(self, hidden_nodes=tuple(), activation=None, seed=42):
         """Initialize the Neural Netowrk.
 
         Args:
@@ -18,9 +20,9 @@ class ANN(abc.ABC):
         """
         self.hidden_nodes = hidden_nodes
         self.activation = activation
+        self.seed = seed
 
         self.network = None
-        self.theta = None
 
     def fit(self, X, y):
         """Fits the ANN model.
@@ -51,10 +53,25 @@ class ANN(abc.ABC):
         """
         nodes = (n,) + self.hidden_nodes + (k,)
 
-        self.network = [np.random.randn(i, j) for i, j in zip(nodes[:-1], nodes[1:])]
+        np.random.seed(self.seed)
 
-class MLP(ANN):
-    """Feed-forward Multi-layer Perceptron model."""
+        self.network = [np.random.randn(i, j)
+                        for i, j
+                        in zip(nodes[:-1], nodes[1:])]
+
+    def _feed_forward(self, X):
+        """Feed forward network with dataset X."""
+        out = X.T
+
+        for layer in self.network:
+            z = layer.T.dot(out)
+
+            out = self.activation(z)
+
+        return out
+
+class MLP(FeedForwardANN):
+    """Feed-forward Multi-Layer Perceptron model."""
 
     def fit(self, X, y):
         """Fits the MLP model.

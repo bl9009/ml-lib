@@ -4,17 +4,21 @@ import unittest
 
 import numpy as np
 
-from ml.models.ann import ANN
+from ml.models.ann import FeedForwardANN
 
 class TestANN(unittest.TestCase):
     """Tests for ANN."""
 
-    class MockANN(ANN):
+    class MockANN(FeedForwardANN):
         """Mock class ANN to access protected methods."""
 
         def build_network(self, n, k):
             """Exhibit protected _build_network method."""
             self._build_network(n, k)
+
+        def feed_forward(self, X):
+            """Exhibit protected _feed_forward method."""
+            return self._feed_forward(X)
 
     def test_build_network(self):
         """Test network construction."""
@@ -35,3 +39,20 @@ class TestANN(unittest.TestCase):
 
         for layer, test_layer in zip(network, test_network):
             self.assertEqual(layer.shape, test_layer.shape)
+
+    def test_feed_forward(self):
+        """Test forward feeding."""
+
+        def activation(z):
+            """Activation dummy."""
+            return z
+
+        ann = self.MockANN(hidden_nodes=(4, 6), activation=activation)
+
+        ann.build_network(2, 3)
+
+        X = np.random.randint(0, 100, size=(130, 2))
+
+        out = ann.feed_forward(X)
+
+        self.assertEqual(out.T.shape, (130, 3))
