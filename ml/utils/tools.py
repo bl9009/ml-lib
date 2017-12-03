@@ -10,8 +10,8 @@ def feature_count(X):
     """Return number of features of feature set."""
     return X.shape[1]
 
-def label_counts(y):
-    """Return array with counts of each label in feature set X."""
+def class_count(y):
+    """Return array with counts of each class in label set y."""
     return np.bincount(y)
 
 def insert_intercept(X):

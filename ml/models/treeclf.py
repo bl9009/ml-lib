@@ -87,10 +87,10 @@ class DecisionTreeClassifier(object):
                                    node_right,
                                    split.feature_id,
                                    split.threshold,
-                                   label=np.argmax(tools.label_counts(y)))
+                                   label=np.argmax(tools.class_count(y)))
 
         else:
-            node = BinaryTree.Node(label=np.argmax(tools.label_counts(y)))
+            node = BinaryTree.Node(label=np.argmax(tools.class_count(y)))
 
         return node, max(depth_left, depth_right, depth)
 

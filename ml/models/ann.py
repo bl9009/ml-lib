@@ -64,7 +64,7 @@ class MLP(ANN):
             y: Labels.
         """
         n = tools.feature_count(X)
-        k = tools.label_counts(y)
+        k = tools.class_count(y)
 
         self._build_network(n, k)
 

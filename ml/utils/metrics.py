@@ -75,6 +75,6 @@ def gini(X, y):
     """
     m = tools.instance_count(X)
 
-    label_counts = tools.label_counts(y)
+    class_count = tools.class_count(y)
 
-    return 1 - sum([(n / m)**2 for n in label_counts])
+    return 1 - sum([(k / m)**2 for k in class_count])
