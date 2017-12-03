@@ -1,4 +1,4 @@
-"""Tests for ANN module."""
+"""Tests for MLP module."""
 
 import unittest
 
