@@ -4,6 +4,7 @@ import unittest
 
 import numpy as np
 
+from ml.models import mlp
 from ml.models.mlp import MLP
 
 class TestMLP(unittest.TestCase):
@@ -43,11 +44,7 @@ class TestMLP(unittest.TestCase):
     def test_feed_forward(self):
         """Test forward feeding."""
 
-        def activation(z):
-            """Activation dummy."""
-            return z
-
-        ann = self.MockMLP(hidden_nodes=(4, 6), activation=activation)
+        ann = self.MockMLP(hidden_nodes=(4, 6), activation=mlp.identity)
 
         ann.build_network(2, 3)
 

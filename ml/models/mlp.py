@@ -41,7 +41,7 @@ class MLP(object):
         Returns:
             A numpy array containing the predicted values.
         """
-        pass
+        return self._feed_forward(X)
 
     def _build_network(self, n, k):
         """Construct the network.
@@ -68,3 +68,16 @@ class MLP(object):
             out = self.activation(z).T
 
         return out
+
+
+def sigmoid(z):
+    return z
+
+def relu(z):
+    return z
+
+def tanh(z):
+    return z
+
+def identity(z):
+    return z
