@@ -11,6 +11,17 @@ from ml.utils import metrics
 class TestDecisionTreeClassifier(unittest.TestCase):
     """Tests for DecisionTreeClassifier."""
 
+    class MockDecisionTreeClassifier(DecisionTreeClassifier):
+        """Mock class DecisionTreeClassifier to access protected methods."""
+
+        def split(self, X, y, feature_id, threshold):
+            """Exhibit protected _split method."""
+            return self._split(X, y, feature_id, threshold)
+
+        def find_best_split(self, X, y):
+            """Exhibit protected _find_best_split method."""
+            return self._find_best_split(X, y)
+
     def test_gini(self):
         """Test gini computation."""
         X, y, gini = data_set()
@@ -25,9 +36,9 @@ class TestDecisionTreeClassifier(unittest.TestCase):
 
         test_left_X, test_left_y, test_right_X, test_right_y = test_split
 
-        clf = DecisionTreeClassifier()
+        clf = self.MockDecisionTreeClassifier()
 
-        split = clf._split(X, y, feature_id=1, threshold=18)
+        split = clf.split(X, y, feature_id=1, threshold=18)
 
         self.assertArraysEqual(split.left_X, test_left_X)
         self.assertArraysEqual(split.left_y, test_left_y)
@@ -42,9 +53,9 @@ class TestDecisionTreeClassifier(unittest.TestCase):
 
         test_left_X, test_left_y, test_right_X, test_right_y = test_split
 
-        clf = DecisionTreeClassifier()
+        clf = self.MockDecisionTreeClassifier()
 
-        split = clf._find_best_split(X, y)
+        split = clf.find_best_split(X, y)
 
         self.assertArraysEqual(split.left_X, test_left_X)
         self.assertArraysEqual(split.left_y, test_left_y)

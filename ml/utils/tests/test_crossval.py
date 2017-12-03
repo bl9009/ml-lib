@@ -10,18 +10,25 @@ from ml.utils.crossval import CrossValidation
 class TestCrossValidation(unittest.TestCase):
     """Tests for CrossValidation."""
 
+    class MockCrossValidation(CrossValidation):
+        """Mock class CrossValidation to access protected methods."""
+
+        def generate_split(self, X, y):
+            """Exhibit protected _generate_split method."""
+            return self._generate_split(X, y)
+
     def test_score(self):
         """Test score computation."""
         pass
 
     def test_generate_split(self):
         """Test splitting of data."""
-        cv = CrossValidation(val_ratio=0.3)
+        cv = self.MockCrossValidation(val_ratio=0.3)
 
         X = np.random.randint(0, 100, size=(100, 5))
         y = np.random.randint(0, 1, size=(100, 1))
 
-        split = cv._generate_split(X, y)
+        split = cv.generate_split(X, y)
 
         test_train_X, test_train_y, test_val_X, test_val_y = split
 
