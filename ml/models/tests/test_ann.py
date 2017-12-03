@@ -4,13 +4,13 @@ import unittest
 
 import numpy as np
 
-from ml.models.ann import FeedForwardANN
+from ml.models.mlp import MLP
 
-class TestANN(unittest.TestCase):
+class TestMLP(unittest.TestCase):
     """Tests for ANN."""
 
-    class MockANN(FeedForwardANN):
-        """Mock class ANN to access protected methods."""
+    class MockMLP(MLP):
+        """Inherit class MLP to access protected methods."""
 
         def build_network(self, n, k):
             """Exhibit protected _build_network method."""
@@ -28,7 +28,7 @@ class TestANN(unittest.TestCase):
             np.random.randn(5, 6),
             np.random.randn(7, 3)]
 
-        ann = self.MockANN(hidden_nodes=(4, 6))
+        ann = self.MockMLP(hidden_nodes=(4, 6))
 
         n = 10
         k = 3
@@ -47,7 +47,7 @@ class TestANN(unittest.TestCase):
             """Activation dummy."""
             return z
 
-        ann = self.MockANN(hidden_nodes=(4, 6), activation=activation)
+        ann = self.MockMLP(hidden_nodes=(4, 6), activation=activation)
 
         ann.build_network(2, 3)
 

@@ -1,17 +1,16 @@
 """Implementations of feed-forward Artifical Neural Network models."""
 
-import abc
-
 import numpy as np
 
 from ..utils import tools
 
-class FeedForwardANN(abc.ABC):
-    """Abstract base class for forwared-fed
-    Artificial Neural Network models.
-    """
+class MLP(object):
+    """Feed-forward Multi-Layer Perceptron model."""
 
-    def __init__(self, hidden_nodes=tuple(), activation=None, seed=42):
+    def __init__(self,
+                 hidden_nodes=tuple(),
+                 activation=None,
+                 seed=42):
         """Initialize the Neural Netowrk.
 
         Args:
@@ -45,7 +44,7 @@ class FeedForwardANN(abc.ABC):
         pass
 
     def _build_network(self, n, k):
-        """Builds the network.
+        """Construct the network.
 
         Args:
             n: number of features (input nodes).
@@ -63,36 +62,9 @@ class FeedForwardANN(abc.ABC):
         """Feed forward network with dataset X."""
         out = X
 
-        for i, layer in enumerate(self.network):
+        for layer in self.network:
             z = layer.T.dot(tools.insert_intercept(out).T)
 
             out = self.activation(z).T
 
         return out
-
-
-class MLP(FeedForwardANN):
-    """Feed-forward Multi-Layer Perceptron model."""
-
-    def fit(self, X, y):
-        """Fits the MLP model.
-
-        Args:
-            X: Training data set.
-            y: Labels.
-        """
-        n = tools.feature_count(X)
-        k = tools.class_count(y)
-
-        self._build_network(n, k)
-
-    def predict(self, X):
-        """Performs predictions based on fitted model.
-
-        Args:
-            X: Feature set.
-
-        Returns:
-            A numpy array containing the predicted values.
-        """
-        pass
