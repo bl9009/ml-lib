@@ -39,7 +39,7 @@ class MLP(object):
             X: Feature set.
 
         Returns:
-            A numpy array containing the predicted values.
+            A numpy array containing the probability for each class.
         """
         return self._feed_forward(X)
 
@@ -71,13 +71,10 @@ class MLP(object):
 
 
 def sigmoid(z):
-    return z
+    return 1. / (1 + np.exp(-z))
 
 def relu(z):
     return z
 
 def tanh(z):
-    return z
-
-def identity(z):
     return z
