@@ -1,7 +1,7 @@
 # Python Machine Learning Library
 by Benjamin Labas
 
-Implementations of machine learning models and algorithms to help me getting a better understanding of how these algorithms work and improving intuition of how to use them.
+This Python library contains custom implementations of machine learning models and algorithms, helping me to get a better understanding of how these algorithms work and to improve my intuition on how to make use of them.
 
 Implemented in Python 3.6 and NumPy 1.13.
 
