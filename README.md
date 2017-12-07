@@ -10,6 +10,7 @@ Following machine learning models are available so far:
 
 #### Regressors
 - Linear regression (Stochastic Gradient Descent, Normal Equation)
+- Ridge (l2) and LASSO (l1) regression (included in Linear regression)
 - Logistic regression
 - Polynomial regression
 
