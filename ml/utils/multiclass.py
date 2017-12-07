@@ -77,4 +77,4 @@ def evaluate(results, classes):
         results: A dict with predicted results per class.
         classes: Array of classes.
     """
-    return classes[np.where(results[:, :] == 1)[1]]
+    return classes[np.where(results[:, :] == POSITIVE_CLASS)[1]]
