@@ -60,14 +60,63 @@ class MLP(object):
 
     def _feed_forward(self, X):
         """Feed forward network with dataset X."""
-        out = X
+        a = X
 
         for layer in self.network:
-            z = layer.T.dot(tools.insert_intercept(out).T)
+            z = layer.T.dot(tools.insert_intercept(a).T)
 
-            out = self.activation(z).T
+            a = self.activation(z).T
 
-        return out
+        return a
+
+    def _back_propagate(self, X, y):
+        """Calculate derivatives of log loss function J using
+        back propagation algorithm.
+
+        Args:
+            X: Training data set.
+            y: Training labels.
+
+        Returns:
+            tbd
+        """
+        # 0. init Deltas
+        Deltas = [np.zeros(shape=layer.shape) 
+                 for layer
+                 in self.network]        
+
+        # 1. compute a for every layer (forward prop)
+        activations = list()
+        zs = list()
+
+        a = X
+
+        for layer in self.network:
+            z = layer.T.dot(tools.insert_intercept(a).T)
+
+            zs.append(z)
+
+            a = self.activation(z).T
+
+            activations.append(a)
+
+        # 2. compute delta for last layer
+        deltas = list()
+
+        delta = a - y
+
+        deltas.append(delta)
+
+        # 3. compute delta for other layers
+        for a, z in zip(activations[-2::-1], zs[-2::-1]):
+            delta = deltas[-1] * activation_derivative(z)
+
+            deltas.append(delta)            
+
+        # 4. compute Delta
+
+        # 5. comput D
+        
 
 
 def sigmoid(z):
