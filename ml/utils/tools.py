@@ -4,7 +4,8 @@ import numpy as np
 
 def instance_count(X):
     """Return number of instances of feature set."""
-    return X.shape[0]
+    # alternatively: return X.shape[0]
+    return len(X)
 
 def feature_count(X):
     """Return number of features of feature set."""
