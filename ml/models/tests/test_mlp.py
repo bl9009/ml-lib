@@ -44,7 +44,7 @@ class TestMLP(unittest.TestCase):
     def test_feed_forward(self):
         """Test forward feeding."""
 
-        ann = self.MockMLP(hidden_nodes=(4, 6), activation=mlp.identity)
+        ann = self.MockMLP(hidden_nodes=(4, 6), activation=mlp.tanh)
 
         ann.build_network(2, 3)
 
