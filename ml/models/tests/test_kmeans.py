@@ -28,7 +28,7 @@ class TestKMeans(unittest.TestCase):
         means = X[np.random.randint(instances, size=k), :]
 
         model = self.MockKMeans(k, seed=42)
-        
+
         test_means = model.initial_means(X)
 
         self.assertTrue(np.array_equal(means, test_means))

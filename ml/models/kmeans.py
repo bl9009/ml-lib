@@ -9,7 +9,7 @@ class KMeans(object):
 
     def __init__(self, k=2, seed=42):
         self.k = k
-        
+
         np.random.seed(seed)
 
     def fit(self, X, y=None):
@@ -19,13 +19,15 @@ class KMeans(object):
             X: Training data set.
             y: Irrelevant.
         """
+        _ = y # workaround in order to keep argument y and maintain interface
+
         finished = False
 
         clusters = None
 
         means = self._initial_means(X)
-        
-        while finished == False:
+
+        while finished is False:
             new_clusters = self._assign_clusters(X, means)
 
             if clusters == new_clusters:
@@ -58,6 +60,6 @@ class KMeans(object):
         """Assign instances of X to clusters depending on distance to means."""
         pass
 
-    def _compute_means(X):
+    def _compute_means(self, X):
         """Compute set of k means."""
         pass
