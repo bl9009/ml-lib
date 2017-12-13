@@ -8,6 +8,12 @@ class KMeans(object):
     """K-Means clustering model implementation based on Lloyd's algorithm."""
 
     def __init__(self, k=2, seed=42):
+        """Initialize K-Means model.
+        
+        Args:
+            k: Number of clusters.
+            seed: Seed used to randomly initialize means.
+        """
         self.k = k
 
         np.random.seed(seed)
