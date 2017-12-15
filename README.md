@@ -8,6 +8,8 @@ Implemented in Python 3.6 and NumPy 1.13.
 ## Models
 Following machine learning models are available so far:
 
+### Supervised
+
 #### Regressors
 - Linear regression (Stochastic Gradient Descent, Normal Equation)
 - Ridge (l2) and LASSO (l1) regression (included in Linear regression)
@@ -20,6 +22,11 @@ Following machine learning models are available so far:
 - Support Vector Machines (under construction)
 - Artificial Neural Networks
   - Multi-layer Perceptron (under construction)
+
+### Unsupervised
+
+#### Clustering
+- K-Means (Lloyd's algorithm) (under construction)
 
 
 ## Others
