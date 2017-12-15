@@ -9,7 +9,7 @@ class KMeans(object):
 
     def __init__(self, k=2, seed=42):
         """Initialize K-Means model.
-        
+
         Args:
             k: Number of clusters.
             seed: Seed used to randomly initialize means.
@@ -31,12 +31,12 @@ class KMeans(object):
 
         clusters = None
 
-        means = self._initial_means(X)
+        means = self._init_means(X)
 
         while finished is False:
             new_clusters = self._assign_clusters(X, means)
 
-            if clusters == new_clusters:
+            if np.array_equal(new_clusters, clusters):
                 finished = True
             else:
                 clusters = new_clusters
@@ -56,7 +56,7 @@ class KMeans(object):
         """
         pass
 
-    def _initial_means(self, X):
+    def _init_means(self, X):
         """Randomly select initial means."""
         instances = tools.instance_count(X)
 
@@ -64,7 +64,14 @@ class KMeans(object):
 
     def _assign_clusters(self, X, means):
         """Assign instances of X to clusters depending on distance to means."""
-        pass
+        clusters = np.full(shape=tools.instance_count(X), fill_value=-1)
+
+        for id_, instance in enumerate(X):
+            cluster = np.argmin(np.linalg.norm(instance - means, axis=1))
+
+            clusters[id_] = cluster
+
+        return clusters
 
     def _compute_means(self, X):
         """Compute set of k means."""
