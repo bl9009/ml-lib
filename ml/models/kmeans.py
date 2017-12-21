@@ -54,7 +54,7 @@ class KMeans(object):
         Returns:
             A numpy array containing the predicted values.
         """
-        pass
+        return self._assign_clusters(X)
 
     def _init_means(self, X):
         """Randomly select initial means."""
