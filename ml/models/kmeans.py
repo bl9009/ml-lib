@@ -41,7 +41,7 @@ class KMeans(object):
             else:
                 clusters = new_clusters
 
-                means = self._compute_means(X)
+                means = self._compute_means(X, clusters)
 
         return clusters
 
