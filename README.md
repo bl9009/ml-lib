@@ -26,7 +26,7 @@ Following machine learning models are available so far:
 ### Unsupervised
 
 #### Clustering
-- K-Means (Lloyd's algorithm) (under construction)
+- K-Means (Lloyd's algorithm)
 
 
 ## Others
