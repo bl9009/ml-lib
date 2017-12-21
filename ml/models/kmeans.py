@@ -16,6 +16,8 @@ class KMeans(object):
         """
         self.k = k
 
+        self.means = None
+
         np.random.seed(seed)
 
     def fit(self, X, y=None):
@@ -31,19 +33,17 @@ class KMeans(object):
 
         clusters = None
 
-        means = self._init_means(X)
+        self._init_means(X)
 
         while finished is False:
-            new_clusters = self._assign_clusters(X, means)
+            new_clusters = self._assign_clusters(X)
 
             if np.array_equal(new_clusters, clusters):
                 finished = True
             else:
                 clusters = new_clusters
 
-                means = self._compute_means(X, clusters)
-
-        return clusters
+                self._update_means(X, clusters)
 
     def predict(self, X):
         """Determine cluster for each instance in dataset X.
@@ -60,34 +60,39 @@ class KMeans(object):
         """Randomly select initial means."""
         instances = tools.instance_count(X)
 
-        return X[np.random.randint(instances, size=self.k), :]
+        self.means = X[np.random.randint(instances, size=self.k), :]
 
-    def _assign_clusters(self, X, means):
+    def _assign_clusters(self, X):
         """Assign instances of X to clusters depending on distance to means."""
         clusters = np.full(shape=tools.instance_count(X), fill_value=-1)
 
         for id_, instance in enumerate(X):
-            cluster = np.argmin(np.linalg.norm(instance - means, axis=1))
+            cluster = np.argmin(np.linalg.norm(instance - self.means, axis=1))
 
             clusters[id_] = cluster
 
         return clusters
 
-    def _compute_means(self, X, clusters):
-        """Compute set of k means."""
-        means = np.zeros(shape=(k, tools.feature_count(X)))
+    def _update_means(self, X, clusters):
+        """Compute and update means."""
+        self.means = compute_means(X, self.k, clusters)
 
-        for cluster_id in range(self.k):
-            cluster = cluster_array(X, clusters, cluster_id)
 
-            means[cluster_id] = mean_of_cluster(cluster)
+def compute_means(X, k, clusters):
+    """Compute set of k means."""
+    means = np.zeros(shape=(k, tools.feature_count(X)))
 
-        return means
+    for cluster_id in range(k):
+        cluster = cluster_array(X, clusters, cluster_id)
+
+        means[cluster_id] = mean_of_cluster(cluster)
+
+    return means
 
 def mean_of_cluster(cluster):
     """Compute the mean of given cluster."""
-    return cluster_array(X, clusters, cluster_id).mean(axis=0)
+    return cluster.mean(axis=0)
 
 def cluster_array(X, clusters, cluster_id):
     """Get an array with all instances per cluster."""
-    return X[np.where(clusters == clusterId)]
+    return X[np.where(clusters == cluster_id)]

@@ -14,11 +14,11 @@ class TestKMeans(unittest.TestCase):
 
         def init_means(self, X):
             """Exhibit protected _initial_means method."""
-            return self._init_means(X)
+            self._init_means(X)
 
-        def assign_clusters(self, X, means):
+        def assign_clusters(self, X):
             """Exhibit protected method _assign_clusters."""
-            return self._assign_clusters(X, means)
+            return self._assign_clusters(X)
 
     def test_init_means(self):
         """Test initial means selection."""
@@ -33,7 +33,9 @@ class TestKMeans(unittest.TestCase):
 
         model = self.MockKMeans(k, seed=42)
 
-        test_means = model.init_means(X)
+        model.init_means(X)
+
+        test_means = model.means
 
         self.assertTrue(np.array_equal(means, test_means))
 
@@ -52,9 +54,10 @@ class TestKMeans(unittest.TestCase):
                           [1, 2, 3]])
 
         model = self.MockKMeans(k)
+        model.means = means
 
         clusters = np.array([1, 0, 0, 1, 0, 1])
 
-        test_clusters = model.assign_clusters(X, means)
+        test_clusters = model.assign_clusters(X)
 
         self.assertTrue(np.array_equal(clusters, test_clusters))
