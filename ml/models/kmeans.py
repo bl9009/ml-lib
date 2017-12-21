@@ -73,6 +73,21 @@ class KMeans(object):
 
         return clusters
 
-    def _compute_means(self, X):
+    def _compute_means(self, X, clusters):
         """Compute set of k means."""
-        pass
+        means = np.zeros(shape=(k, tools.feature_count(X)))
+
+        for cluster_id in range(self.k):
+            cluster = cluster_array(X, clusters, cluster_id)
+
+            means[cluster_id] = mean_of_cluster(cluster)
+
+        return means
+
+def mean_of_cluster(cluster):
+    """Compute the mean of given cluster."""
+    return cluster_array(X, clusters, cluster_id).mean(axis=0)
+
+def cluster_array(X, clusters, cluster_id):
+    """Get an array with all instances per cluster."""
+    return X[np.where(clusters == clusterId)]
