@@ -133,7 +133,7 @@ def precision(predicted_y, validation_y):
     true_pos = true_positives(predicted_y, validation_y)
     false_pos = false_positives(predicted_y, validation_y)
 
-    return true_pos / (true_pos + false_pos)
+    return true_pos / (true_pos + false_pos) if (true_pos + false_pos) > 0 else 0
 
 def recall(predicted_y, validation_y):
     """Computes the recall, meaning how many of all actual positives
@@ -142,4 +142,4 @@ def recall(predicted_y, validation_y):
     true_pos = true_positives(predicted_y, validation_y)
     false_neg = false_negatives(predicted_y, validation_y)
 
-    return true_pos / (true_pos + false_neg)
+    return true_pos / (true_pos + false_neg) if (true_pos + false_neg) > 0 else 0
