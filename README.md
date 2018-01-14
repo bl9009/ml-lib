@@ -21,7 +21,7 @@ Following machine learning models are available so far:
 - Decision Tree classification
 - Support Vector Machines (under construction)
 - Artificial Neural Networks
-  - Multi-layer Perceptron (under construction)
+  - Feed Forward NN (under construction)
 
 ### Unsupervised
 

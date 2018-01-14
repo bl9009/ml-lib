@@ -4,7 +4,7 @@ import numpy as np
 
 from ..utils import tools
 
-class MLP(object):
+class FeedForwardNN(object):
     """Feed-forward Multi-Layer Perceptron model."""
 
     def __init__(self,
