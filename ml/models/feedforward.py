@@ -1,5 +1,7 @@
 """Implementations of feed-forward Artifical Neural Network models."""
 
+import math
+
 import numpy as np
 
 from ..utils import tools
@@ -80,44 +82,37 @@ class FeedForwardNN(object):
         Returns:
             tbd
         """
-        # 0. init Deltas
+        # init Deltas
         Deltas = [np.zeros(shape=layer.shape) 
                  for layer
                  in self.network]        
 
-        # 1. compute a for every layer (forward prop)
-        activations = list()
-        zs = list()
+        for x_i, y_i in zip(X, y):
+            deltas = list()
 
-        a = X
+            activations = list([x_i])
 
-        for layer in self.network:
-            z = layer.T.dot(tools.insert_intercept(a).T)
+            # forward propagation
+            for layer in self.network:
+                z = layer.T.dot(tools.insert_intercept(activations[-1]).T)
 
-            zs.append(z)
+                activations.append(self.activation(z))
+                
+            # start backpropagation
+            # compute delta(L)
+            deltas.append(activations[-1] - y_i)
 
-            a = self.activation(z).T
+            # compute delta(L-1), delta(L-2), ... delta(1), delta(0)
+            for layer, a in zip(self.network[-2::-1],
+                                activations[-2::-1]):
+                delta = layer.T.dot(deltas[0]) * (a * (1 - a))
 
-            activations.append(a)
+                deltas.prepend(delta)
 
-        # 2. compute delta for last layer
-        deltas = list()
-
-        delta = a - y
-
-        deltas.append(delta)
-
-        # 3. compute delta for other layers
-        for a, z in zip(activations[-2::-1], zs[-2::-1]):
-            delta = deltas[-1] * activation_derivative(z)
-
-            deltas.append(delta)            
-
-        # 4. compute Delta
-
-        # 5. comput D
+            # update Deltas
+            for l, Delta in enumerate(Deltas):
+                Delta[l] = Delta + deltas[l+1].dot(activations[l].T)
         
-
 
 def sigmoid(z):
     return 1. / (1 + np.exp(-z))
@@ -126,4 +121,4 @@ def relu(z):
     return max(0, z)
 
 def tanh(z):
-    return z
+    return math.tanh(z)
