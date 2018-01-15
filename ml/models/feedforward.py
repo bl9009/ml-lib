@@ -115,10 +115,13 @@ class FeedForwardNN(object):
         
 
 def sigmoid(z):
+    """Sigmoid activation function."""
     return 1. / (1 + np.exp(-z))
 
 def relu(z):
+    """Rectified Linear Unit (ReLU) activation function."""
     return max(0, z)
 
 def tanh(z):
+    """tanh activation function."""
     return math.tanh(z)
