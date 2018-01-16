@@ -137,7 +137,7 @@ class FeedForwardNN(object):
         return gradients
 
     def __zeros(self):
-        """Helper to return zero network."""
+        """Helper to return network copy of zeros."""
         return [np.zeros(shape=layer.shape)
                 for layer
                 in self.network]
