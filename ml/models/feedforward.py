@@ -1,7 +1,5 @@
 """Implementations of feed-forward Artifical Neural Network models."""
 
-import math
-
 import numpy as np
 
 from ..utils import tools
@@ -152,4 +150,4 @@ def relu(z):
 
 def tanh(z):
     """tanh activation function."""
-    return math.tanh(z)
+    return np.tanh(z)
