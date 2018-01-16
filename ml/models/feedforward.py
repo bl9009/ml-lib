@@ -89,19 +89,20 @@ class FeedForwardNN(object):
 
             activations = list([x_i])
 
-            # forward propagation
+            # forwardpropagation
             for layer in self.network:
                 z = layer.T.dot(tools.insert_intercept(activations[-1]).T)
 
                 activations.append(self.activation(z))
 
-            # start backpropagation
+            # backpropagation
             errors = self.__compute_errors(activations, y_i)
             deltas = self.__update_deltas(deltas, activations, errors)
 
         return self.__compute_gradients(deltas, m=tools.instance_count(X))
 
     def __compute_errors(self, activations, y_i):
+        """Compute errors for each node in each layer."""
         errors = list()
 
         # compute delta(L)
@@ -117,12 +118,14 @@ class FeedForwardNN(object):
         return errors
 
     def __update_deltas(self, deltas, activations, errors):
+        """Update deltas used for gradient computation."""
         for l, delta in enumerate(deltas):
             deltas[l] = delta + errors[l+1].dot(activations[l].T)
 
         return deltas
 
     def __compute_gradients(self, deltas, m):
+        """Compute gradient for each node in each layer."""
         gradients = self.__zeros()
 
         for l, layer in enumerate(self.network):
