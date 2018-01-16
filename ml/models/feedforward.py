@@ -12,6 +12,7 @@ class FeedForwardNN(object):
     def __init__(self,
                  hidden_nodes=tuple(),
                  activation=None,
+                 lambda_=0.,
                  seed=42):
         """Initialize the Neural Netowrk.
 
@@ -21,6 +22,7 @@ class FeedForwardNN(object):
         """
         self.hidden_nodes = hidden_nodes
         self.activation = activation
+        self.lambda_ = lambda_
         self.seed = seed
 
         self.network = None
@@ -80,15 +82,21 @@ class FeedForwardNN(object):
             y: Training labels.
 
         Returns:
-            tbd
+            List of numpy arrays containing gradient for
+            each node in the network.
         """
-        # init Deltas
-        Deltas = [np.zeros(shape=layer.shape) 
-                 for layer
-                 in self.network]        
+        # init Deltas and gradients
+        def zeros():
+            """Helper to return zero network."""
+            return [np.zeros(shape=layer.shape)
+                    for layer
+                    in self.network]
+
+        deltas = zeros()
+        gradients = zeros()
 
         for x_i, y_i in zip(X, y):
-            deltas = list()
+            errors = list()
 
             activations = list([x_i])
 
@@ -97,22 +105,33 @@ class FeedForwardNN(object):
                 z = layer.T.dot(tools.insert_intercept(activations[-1]).T)
 
                 activations.append(self.activation(z))
-                
+
             # start backpropagation
             # compute delta(L)
-            deltas.append(activations[-1] - y_i)
+            errors.append(activations[-1] - y_i)
 
             # compute delta(L-1), delta(L-2), ... delta(1), delta(0)
             for layer, a in zip(self.network[-2::-1],
                                 activations[-2::-1]):
-                delta = layer.T.dot(deltas[0]) * (a * (1 - a))
+                error = layer.T.dot(errors[0]) * (a * (1 - a))
 
-                deltas.prepend(delta)
+                errors.insert(0, error)
 
             # update Deltas
-            for l, Delta in enumerate(Deltas):
-                Delta[l] = Delta + deltas[l+1].dot(activations[l].T)
-        
+            for l, delta in enumerate(deltas):
+                delta[l] = delta + errors[l+1].dot(activations[l].T)
+
+        # compute gradients
+        m = tools.instance_count(X)
+
+        for l, layer in enumerate(self.network):
+            for j, theta in enumerate(layer):
+                reg = self.lambda_ * theta[l][j] if j != 0 else 0
+
+                gradients[l][j] = 1 / m * (deltas[l][j] + reg)
+
+        return gradients
+
 
 def sigmoid(z):
     """Sigmoid activation function."""
