@@ -85,18 +85,9 @@ class FeedForwardNN(object):
             List of numpy arrays containing gradient for
             each node in the network.
         """
-        # init Deltas and gradients
-        def zeros():
-            """Helper to return zero network."""
-            return [np.zeros(shape=layer.shape)
-                    for layer
-                    in self.network]
-
-        deltas = zeros()
-        gradients = zeros()
+        deltas = self.__zeros()
 
         for x_i, y_i in zip(X, y):
-            errors = list()
 
             activations = list([x_i])
 
@@ -107,22 +98,34 @@ class FeedForwardNN(object):
                 activations.append(self.activation(z))
 
             # start backpropagation
-            # compute delta(L)
-            errors.append(activations[-1] - y_i)
+            errors = self.__compute_errors(activations, y_i)
+            deltas = self.__update_deltas(deltas, activations, errors)
 
-            # compute delta(L-1), delta(L-2), ... delta(1), delta(0)
-            for layer, a in zip(self.network[-2::-1],
-                                activations[-2::-1]):
-                error = layer.T.dot(errors[0]) * (a * (1 - a))
+        return self.__compute_gradients(deltas, m=tools.instance_count(X))
 
-                errors.insert(0, error)
+    def __compute_errors(self, activations, y_i):
+        errors = list()
 
-            # update Deltas
-            for l, delta in enumerate(deltas):
-                delta[l] = delta + errors[l+1].dot(activations[l].T)
+        # compute delta(L)
+        errors.append(activations[-1] - y_i)
 
-        # compute gradients
-        m = tools.instance_count(X)
+        # compute delta(L-1), delta(L-2), ... delta(1), delta(0)
+        for layer, a in zip(self.network[-2::-1],
+                            activations[-2::-1]):
+            error = layer.T.dot(errors[0]) * (a * (1 - a))
+
+            errors.insert(0, error)
+
+        return errors
+
+    def __update_deltas(self, deltas, activations, errors):
+        for l, delta in enumerate(deltas):
+            deltas[l] = delta + errors[l+1].dot(activations[l].T)
+
+        return deltas
+
+    def __compute_gradients(self, deltas, m):
+        gradients = self.__zeros()
 
         for l, layer in enumerate(self.network):
             for j, theta in enumerate(layer):
@@ -131,6 +134,12 @@ class FeedForwardNN(object):
                 gradients[l][j] = 1 / m * (deltas[l][j] + reg)
 
         return gradients
+
+    def __zeros(self):
+        """Helper to return zero network."""
+        return [np.zeros(shape=layer.shape)
+                for layer
+                in self.network]
 
 
 def sigmoid(z):
