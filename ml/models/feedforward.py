@@ -155,7 +155,7 @@ def sigmoid(z):
 
 def relu(z):
     """Rectified Linear Unit (ReLU) activation function."""
-    return max(0, z)
+    return np.maximum(z, 0)
 
 def tanh(z):
     """tanh activation function."""
