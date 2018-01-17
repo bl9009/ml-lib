@@ -57,16 +57,16 @@ class FeedForwardNN(object):
 
         np.random.seed(self.seed)
 
-        self.network = [np.random.randn(i + 1, j)
+        self.network = [np.random.randn(i, j+1)
                         for i, j
-                        in zip(nodes[:-1], nodes[1:])]
+                        in zip(nodes[1:], nodes[:-1])]
 
     def _feed_forward(self, X):
         """Feed forward network with dataset X."""
         a = X
 
         for layer in self.network:
-            z = layer.T.dot(tools.insert_intercept(a).T)
+            z = layer.dot(tools.insert_intercept(a).T)
 
             a = self.activation(z).T
 
@@ -101,7 +101,10 @@ class FeedForwardNN(object):
         activations = list([x_i])
 
         for layer in self.network:
-            z = layer.T.dot(tools.insert_intercept(activations[-1]).T)
+            print(layer.shape)
+
+        for layer in self.network:
+            z = layer.dot(tools.insert_intercept(activations[-1]).T)
 
             activations.append(self.activation(z))
 
