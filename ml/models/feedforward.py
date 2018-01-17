@@ -32,7 +32,8 @@ class FeedForwardNN(object):
             X: Training data set.
             y: Labels.
         """
-        pass
+        self._build_network(tools.feature_count(X),
+                            tools.distinct_class_count(y))
 
     def predict(self, X):
         """Performs predictions based on fitted model.
