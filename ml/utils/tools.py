@@ -15,6 +15,10 @@ def class_count(y):
     """Return array with counts of each class in label set y."""
     return np.bincount(y)
 
+def distinct_class_count(y):
+    """Returns the count of distinct classes."""
+    return len(np.unique(y))
+
 def insert_intercept(X):
     """Prepend feature x0 = 1 to feature set X.
     Args:
