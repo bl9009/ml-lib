@@ -58,15 +58,24 @@ class TestFeedForwardNN(unittest.TestCase):
 
     def test_compute_activations(self):
         """Test computation of activations."""
-        #ann = self.MockFF(hidden_nodes=(4, 6), activation=feedforward.relu)
+        ann = self.MockFF(hidden_nodes=(4,), activation=feedforward.relu)
 
-        #ann.build_network(4, 3)
+        ann.build_network(4, 3)
 
-        #x_i = np.array([4, 7, 8, 4])
+        x_i = np.array([4, 7, 8, 4])
 
-        #activations = ann.compute_activations(x_i)
+        activations = ann.compute_activations(x_i)
 
-        #print(ann.network)
+        activations_test = [
+            np.array([[4, 7, 8, 4]]),
+            np.array([[15.72510207, 9.8692025, 0., 0.]]),
+            np.array([[0., 0., 28.39235005]])
+            ]
+
+        for test, actual in zip(activations_test, activations):
+            self.assertTrue(
+                np.array_equal(test.round(decimals=5),
+                               actual.round(decimals=5)))
 
     def test_compute_errors(self):
         """Test compute errors helper function."""
