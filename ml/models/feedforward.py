@@ -98,15 +98,12 @@ class FeedForwardNN(object):
 
     def __compute_activations(self, x_i):
         """Helper method to compute activations for each node."""
-        activations = list([x_i])
-
-        for layer in self.network:
-            print(layer.shape)
+        activations = list(np.matrix(x_i))
 
         for layer in self.network:
             z = layer.dot(tools.insert_intercept(activations[-1]).T)
 
-            activations.append(self.activation(z))
+            activations.append(self.activation(z).T)
 
         return activations
 
