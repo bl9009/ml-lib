@@ -28,6 +28,9 @@ def insert_intercept(X):
     Returns:
     Updated feature set with prepended feature x0 = 1
     """
+    if len(X.shape) == 1:
+        X = np.matrix(X)
+
     instances, features = X.shape
 
     features += 1
